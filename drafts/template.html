@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мобильное приложение</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+<!-- Шапка (фиксированная) -->
+<header class="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
+    <div class="flex items-center justify-between">
+        <!-- Поиск -->
+        <div class="relative flex-1 max-w-md mr-2">
+            <input type="text" placeholder="Поиск..." class="w-full py-2 px-4 pr-10 rounded-full bg-blue-500 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <i class="fas fa-search absolute right-3 top-3 text-blue-200"></i>
+        </div>
+
+        <!-- Иконки справа -->
+        <div class="flex items-center space-x-4">
+            <!-- Монеты -->
+            <div class="relative">
+                <i class="fas fa-coins text-yellow-300 text-xl"></i>
+                <span class="absolute -top-2 -right-2 bg-yellow-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">150</span>
+            </div>
+
+            <!-- Уведомления -->
+            <div class="relative">
+                <i class="far fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">3</span>
+            </div>
+
+            <!-- Аватар -->
+            <div class="w-8 h-8 rounded-full bg-white overflow-hidden">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Аватар" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Основной контент (с отступом под шапку) -->
+<main class="flex-1 mt-16 mb-16">
+    <!-- Рекомендованные сообщества -->
+    <section class="p-4">
+        <h2 class="text-xl font-bold mb-3">Рекомендуем</h2>
+        <div class="flex space-x-3 overflow-x-auto pb-2">
+            <!-- Карточка сообщества -->
+            <div class="flex-shrink-0 w-24">
+                <div class="bg-white rounded-lg p-2 shadow-sm text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-blue-100 overflow-hidden mb-1">
+                        <img src="https://via.placeholder.com/64?text=G" alt="Гейминг" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs font-medium truncate">Гейминг</p>
+                </div>
+            </div>
+
+            <!-- Еще карточки -->
+            <div class="flex-shrink-0 w-24">
+                <div class="bg-white rounded-lg p-2 shadow-sm text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-red-100 overflow-hidden mb-1">
+                        <img src="https://via.placeholder.com/64?text=M" alt="Музыка" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs font-medium truncate">Музыка</p>
+                </div>
+            </div>
+
+            <div class="flex-shrink-0 w-24">
+                <div class="bg-white rounded-lg p-2 shadow-sm text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-green-100 overflow-hidden mb-1">
+                        <img src="https://via.placeholder.com/64?text=A" alt="Аниме" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs font-medium truncate">Аниме</p>
+                </div>
+            </div>
+
+            <div class="flex-shrink-0 w-24">
+                <div class="bg-white rounded-lg p-2 shadow-sm text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-purple-100 overflow-hidden mb-1">
+                        <img src="https://via.placeholder.com/64?text=T" alt="Технологии" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs font-medium truncate">Технологии</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Баннер с ивентом -->
+    <section class="px-4 mb-4">
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white shadow-md">
+            <h3 class="font-bold text-lg mb-1">Текущий ивент</h3>
+            <p class="text-sm mb-2">Собери 1000 монет и получи эксклюзивный бейдж!</p>
+            <div class="w-full bg-white bg-opacity-30 rounded-full h-2 mb-2">
+                <div class="bg-yellow-300 h-2 rounded-full" style="width: 45%"></div>
+            </div>
+            <p class="text-xs">450/1000 монет собрано</p>
+        </div>
+    </section>
+
+    <!-- Мои сообщества -->
+    <section class="p-4">
+        <h2 class="text-xl font-bold mb-3">Мои сообщества</h2>
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <!-- Сообщество -->
+            <div class="flex items-center p-3 border-b border-gray-100">
+                <div class="w-10 h-10 rounded-full bg-blue-100 mr-3 overflow-hidden">
+                    <img src="https://via.placeholder.com/40?text=C" alt="Кодинг" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-medium">Кодинг</h3>
+                    <p class="text-xs text-gray-500">12.5K участников</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </div>
+
+            <!-- Еще сообщества -->
+            <div class="flex items-center p-3 border-b border-gray-100">
+                <div class="w-10 h-10 rounded-full bg-green-100 mr-3 overflow-hidden">
+                    <img src="https://via.placeholder.com/40?text=D" alt="Дизайн" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-medium">Дизайн</h3>
+                    <p class="text-xs text-gray-500">8.2K участников</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </div>
+
+            <div class="flex items-center p-3">
+                <div class="w-10 h-10 rounded-full bg-red-100 mr-3 overflow-hidden">
+                    <img src="https://via.placeholder.com/40?text=F" alt="Фитнес" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-medium">Фитнес</h3>
+                    <p class="text-xs text-gray-500">5.7K участников</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Подвал (фиксированный) -->
+<footer class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
+    <div class="flex justify-around">
+        <!-- Главная -->
+        <button class="flex flex-col items-center text-blue-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Главная</span>
+        </button>
+
+        <!-- Магазин -->
+        <button class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-store text-xl"></i>
+            <span class="text-xs mt-1">Магазин</span>
+        </button>
+
+        <!-- Сообщества -->
+        <button class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-users text-xl"></i>
+            <span class="text-xs mt-1">Сообщества</span>
+        </button>
+    </div>
+</footer>
+
+<script>
+    // Можно добавить простой функционал
+    document.querySelectorAll('footer button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Удаляем активный класс у всех кнопок
+            document.querySelectorAll('footer button').forEach(b => {
+                b.classList.remove('text-blue-600');
+                b.classList.add('text-gray-500');
+            });
+
+            // Добавляем активный класс текущей кнопке
+            this.classList.remove('text-gray-500');
+            this.classList.add('text-blue-600');
+        });
+    });
+</script>
+</body>
+</html>
