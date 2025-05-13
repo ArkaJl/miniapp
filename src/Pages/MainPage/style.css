@@ -1,0 +1,187 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Базовые стили */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Кастомные цвета для Tailwind */
+.bg-primary-light {
+    background-color: #85b7ef;
+}
+
+.bg-primary-medium {
+    background-color: #576ecb;
+}
+
+.bg-primary-dark {
+    background-color: #233e85;
+}
+
+.bg-primary-darker {
+    background-color: #1c2562;
+}
+
+.bg-primary-darkest {
+    background-color: #14102a;
+}
+
+.bg-secondary-light {
+    background-color: #bbb2f0;
+}
+
+.bg-secondary-medium {
+    background-color: #8e83e4;
+}
+
+.bg-secondary-dark {
+    background-color: #a45cd4;
+}
+
+.bg-accent {
+    background-color: #262196;
+}
+
+/* Текстовые цвета */
+.text-primary-light {
+    color: #85b7ef;
+}
+
+.text-primary-medium {
+    color: #576ecb;
+}
+
+.text-primary-dark {
+    color: #233e85;
+}
+
+.text-primary-darker {
+    color: #1c2562;
+}
+
+.text-primary-darkest {
+    color: #14102a;
+}
+
+.text-secondary-light {
+    color: #bbb2f0;
+}
+
+.text-secondary-medium {
+    color: #8e83e4;
+}
+
+.text-secondary-dark {
+    color: #a45cd4;
+}
+
+.text-accent {
+    color: #262196;
+}
+
+/* Градиенты */
+.gradient-primary {
+    background: linear-gradient(135deg, #576ecb 0%, #233e85 100%);
+}
+
+.gradient-secondary {
+    background: linear-gradient(135deg, #8e83e4 0%, #a45cd4 100%);
+}
+
+.gradient-accent {
+    background: linear-gradient(135deg, #262196 0%, #1c2562 100%);
+}
+
+/* Кастомные стили для компонентов */
+.community-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(30, 41, 85, 0.15);
+}
+
+.event-banner {
+    box-shadow: 0 4px 6px rgba(166, 92, 212, 0.3);
+}
+
+.nav-item {
+    transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+    color: #576ecb;
+}
+
+.nav-item.active {
+    color: #233e85;
+    position: relative;
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #233e85;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Кастомные scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8e83e4;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a45cd4;
+}
+
+/* Дополнительные утилиты */
+.shadow-soft {
+    box-shadow: 0 4px 12px rgba(30, 41, 85, 0.1);
+}
+
+.hover-scale {
+    transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.03);
+}
+.background-img {
+    background-image: url("https://i.pinimg.com/originals/e4/75/85/e475855ee5fe583d2117e94612ae7050.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

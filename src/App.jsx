@@ -10,7 +10,6 @@ import MainPage from "./Pages/MainPage/MainPage.jsx";
 export default function App() {
     return (
         <Router>
-
             <Routes>
                 <Route
                     path="/profile"
