@@ -1,4 +1,4 @@
-import {FaChevronRight, FaHome, FaSearch, FaStore, FaUsers} from "react-icons/fa";
+import {FaChevronRight, FaHome, FaSearch, FaStore, FaUsers, FaUserTag} from "react-icons/fa";
 import {GiCoins} from "react-icons/gi";
 import {IoIosNotifications} from "react-icons/io";
 import {Link} from "react-router-dom";
@@ -42,7 +42,7 @@ export default function MainPage() {
                             {/* Аватар */}
                             <Link to="/profile">
                                 <div className="w-8 h-8 rounded-full bg-[#233e85] overflow-hidden hover:scale-105 transition-transform">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Аватар"
+                                    <img src="https://texterra.ru/upload/iblock/170/aos3vl8wwzirzaaijlxtq0y3rdnmxocj/soc_seti.webp" alt="Аватар"
                                          className="w-full h-full object-cover"/>
                                 </div>
                             </Link>
@@ -76,7 +76,7 @@ export default function MainPage() {
 
                     {/* Баннер с ивентом */}
                     <section className="px-4 mb-4">
-                        <div className="bg-gradient-to-r from-[#233e85] to-[#a45cd4] rounded-xl p-4 text-white shadow-md">
+                        <div className="bg-gradient-to-r from-[#233e85] to-[#8e83e4] rounded-xl p-4 text-white shadow-md">
                             <h3 className="font-bold text-lg mb-1">Текущий ивент</h3>
                             <p className="text-sm mb-2">Собери 1000 монет и получи эксклюзивный бейдж!</p>
                             <div className="w-full bg-[#233e85] bg-opacity-30 rounded-full h-2 mb-2">
@@ -89,7 +89,7 @@ export default function MainPage() {
                     {/* Мои сообщества */}
                     <section className="p-4">
                         <h2 className="text-xl font-bold mb-3 text-[#bcd8f6]">Мои сообщества</h2>
-                        <div className="bg-[#233e85] rounded-xl shadow-sm overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#233e85] to-[#8e83e4] rounded-xl shadow-sm overflow-hidden">
                             {[
                                 {name: "Кодинг", members: "12.5K", bg: "bg-[#85b7ef]"},
                                 {name: "Дизайн", members: "8.2K", bg: "bg-[#576ecb]"},
@@ -110,22 +110,6 @@ export default function MainPage() {
                     </section>
                 </main>
 
-                {/* Подвал */}
-                <footer className="bg-[#233e85] border-t border-[#85b7ef] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
-                    <div className="flex justify-around">
-                        {[
-                            {icon: <FaHome className="text-xl"/>, name: "Главная", active: true},
-                            {icon: <FaStore className="text-xl"/>, name: "Магазин"},
-                            {icon: <FaUsers className="text-xl"/>, name: "Сообщества"}
-                        ].map((item, index) => (
-                            <button key={index} className={`flex flex-col items-center ${item.active ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}>
-                                {item.icon}
-                                <span className="text-xs mt-1">{item.name}</span>
-                                {item.active && <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>}
-                            </button>
-                        ))}
-                    </div>
-                </footer>
             </div>
         </div>
     )

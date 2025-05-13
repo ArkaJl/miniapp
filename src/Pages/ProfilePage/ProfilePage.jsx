@@ -1,6 +1,20 @@
-import { FaCog, FaMoon, FaSun, FaPalette, FaUserTag, FaEdit, FaCheck, FaImage, FaTimes } from 'react-icons/fa';
+import {
+    FaCog,
+    FaMoon,
+    FaSun,
+    FaPalette,
+    FaUserTag,
+    FaEdit,
+    FaCheck,
+    FaImage,
+    FaTimes,
+    FaHome,
+    FaStore,
+    FaUsers
+} from 'react-icons/fa';
 import { GiCoins } from 'react-icons/gi';
 import { useState, useRef } from 'react';
+import {Link} from "react-router-dom";
 
 const AvatarFrame = ({ frame, selected, onClick }) => {
     return (
@@ -11,7 +25,7 @@ const AvatarFrame = ({ frame, selected, onClick }) => {
             {frame.id === 0 ? (
                 <div className="w-full h-full rounded-full overflow-hidden border-2 border-transparent">
                     <img
-                        src="https://randomuser.me/api/portraits/women/44.jpg"
+                        src="https://texterra.ru/upload/iblock/170/aos3vl8wwzirzaaijlxtq0y3rdnmxocj/soc_seti.webp"
                         alt="Аватар"
                         className="w-full h-full object-cover"
                     />
@@ -29,7 +43,7 @@ const AvatarFrame = ({ frame, selected, onClick }) => {
                     </svg>
                     <div className="absolute inset-3 rounded-full overflow-hidden">
                         <img
-                            src="https://randomuser.me/api/portraits/women/44.jpg"
+                            src="https://texterra.ru/upload/iblock/170/aos3vl8wwzirzaaijlxtq0y3rdnmxocj/soc_seti.webp"
                             alt="Аватар"
                             className="w-full h-full object-cover"
                         />
@@ -50,10 +64,10 @@ export default function ProfilePage() {
     const [selectedFrame, setSelectedFrame] = useState(0);
     const avatarInputRef = useRef(null);
     const bgInputRef = useRef(null);
-    const [avatar, setAvatar] = useState('https://randomuser.me/api/portraits/women/44.jpg');
+    const [avatar, setAvatar] = useState('https://texterra.ru/upload/iblock/170/aos3vl8wwzirzaaijlxtq0y3rdnmxocj/soc_seti.webp');
     const [background, setBackground] = useState({
         type: 'gradient',
-        value: 'from-purple-500 to-pink-600'
+        value: 'from-[#233e85] to-[#8e83e4]'
     });
     const [customBg, setCustomBg] = useState(null);
 
@@ -72,10 +86,9 @@ export default function ProfilePage() {
     ];
 
     const presetBackgrounds = [
-        { id: 1, name: 'Фиолетовый', class: 'from-purple-500 to-pink-600' },
-        { id: 2, name: 'Синий', class: 'from-blue-500 to-teal-400' },
-        { id: 3, name: 'Красный', class: 'from-red-500 to-orange-500' },
-        { id: 4, name: 'Зелёный', class: 'from-green-500 to-emerald-400' },
+        { id: 1, name: 'Фиолетовый', class: 'from-[#233e85] to-[#8e83e4]' },
+        { id: 2, name: 'Синий', class: 'from-[#14102a] to-[#576ecb]' },
+        { id: 3, name: 'Пурпурный', class: 'from-[#262196] to-[#a45cd4]' },
     ];
 
     const changeTheme = (theme) => {
@@ -108,30 +121,29 @@ export default function ProfilePage() {
 
     const removeCustomBg = () => {
         setCustomBg(null);
-        setBackground({ type: 'gradient', value: 'from-purple-500 to-pink-600' });
+        setBackground({ type: 'gradient', value: 'from-[#233e85] to-[#8e83e4]' });
     };
 
     const saveChanges = () => {
         setIsEditing(false);
-        // Здесь можно добавить логику сохранения изменений
     };
 
     return (
-        <div className={`min-h-screen ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+        <div className={`min-h-screen ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-[#1c2562] text-white'}`}>
             {/* Фон профиля с аватаром */}
             <div className={`relative h-64 ${background.type === 'gradient' ? `bg-gradient-to-r ${background.value}` : ''}`}>
                 {background.type === 'custom' && (
                     <div
                         className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${background.value})` }}
+                        style={{backgroundImage: `url(${background.value})`}}
                     />
                 )}
 
-                {/* Аватар с рамкой - теперь внутри фона */}
+                {/* Аватар с рамкой */}
                 <div className="absolute bottom-10 left-1/4 transform -translate-x-1/2">
                     <div className="relative">
                         {selectedFrame > 0 ? (
-                            <div className="relati  ve w-32 h-32">
+                            <div className="relative w-32 h-32">
                                 <svg viewBox="0 0 100 100" className="absolute inset-0">
                                     <path
                                         d={frames[selectedFrame].path}
@@ -163,26 +175,26 @@ export default function ProfilePage() {
 
                 {/* Кнопка редактирования */}
                 <button
-                    className={`absolute top-6 right-6 p-3 rounded-full ${isEditing ? 'bg-green-500 text-white' : 'bg-white bg-opacity-30 text-white'} transition-all z-10`}
+                    className={`absolute top-6 right-6 p-3 rounded-full ${isEditing ? 'bg-green-500 text-white' : 'bg-[#1c2562] bg-opacity-30 text-white'} transition-all z-10`}
                     onClick={isEditing ? saveChanges : () => setIsEditing(true)}
                 >
-                    {isEditing ? <FaCheck className="text-xl" /> : <FaEdit className="text-xl" />}
+                    {isEditing ? <FaCheck className="text-xl"/> : <FaEdit className="text-xl"/>}
                 </button>
             </div>
 
             {/* Контент профиля */}
-            <div className="relative px-4 pt-16"> {/* Увеличили pt для отступа под аватар */}
+            <div className="relative px-4 pt-16">
                 {/* Тег профиля */}
                 <div className="flex justify-center mb-4">
-                    <div className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center shadow-md max-w-full">
-                        <FaUserTag className="mr-1 flex-shrink-0" />
+                    <div className="bg-[#576ecb] text-white px-3 py-1 rounded-full flex items-center shadow-md max-w-full">
+                        <FaUserTag className="mr-1 flex-shrink-0"/>
                         <span className="text-sm font-medium truncate">@{username}</span>
                     </div>
                 </div>
 
                 {/* Редактирование профиля */}
                 {isEditing && (
-                    <div className={`mb-4 p-4 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
+                    <div className={`mb-4 p-4 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'} shadow-lg`}>
                         <h3 className="font-bold text-lg mb-3">Редактирование профиля</h3>
 
                         <div className="mb-4">
@@ -191,7 +203,7 @@ export default function ProfilePage() {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-[#233e85] border-[#576ecb] text-white'}`}
                                 maxLength={30}
                             />
                         </div>
@@ -202,7 +214,7 @@ export default function ProfilePage() {
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value.replace(/\s+/g, '_'))}
-                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-[#233e85] border-[#576ecb] text-white'}`}
                                 maxLength={20}
                             />
                         </div>
@@ -211,9 +223,9 @@ export default function ProfilePage() {
                             <label className="block text-sm font-medium mb-1">Аватар</label>
                             <button
                                 onClick={() => avatarInputRef.current.click()}
-                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} flex items-center justify-center`}
+                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-[#233e85] border-[#576ecb] text-white'} flex items-center justify-center`}
                             >
-                                <FaImage className="mr-2" />
+                                <FaImage className="mr-2"/>
                                 Изменить аватар
                             </button>
                             <input
@@ -248,9 +260,9 @@ export default function ProfilePage() {
                                     <button
                                         key={bg.id}
                                         className={`h-16 rounded-lg bg-gradient-to-r ${bg.class} ${
-                                            background.type === 'gradient' && background.value === bg.class ? 'ring-2 ring-blue-500' : ''
+                                            background.type === 'gradient' && background.value === bg.class ? 'ring-2 ring-[#8e83e4]' : ''
                                         }`}
-                                        onClick={() => setBackground({ type: 'gradient', value: bg.class })}
+                                        onClick={() => setBackground({type: 'gradient', value: bg.class})}
                                     >
                                         <span className="text-xs text-white font-medium">{bg.name}</span>
                                     </button>
@@ -259,9 +271,9 @@ export default function ProfilePage() {
 
                             <button
                                 onClick={() => bgInputRef.current.click()}
-                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} flex items-center justify-center`}
+                                className={`w-full p-2 rounded-lg border ${currentTheme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-[#233e85] border-[#576ecb] text-white'} flex items-center justify-center`}
                             >
-                                <FaImage className="mr-2" />
+                                <FaImage className="mr-2"/>
                                 Загрузить свой фон
                             </button>
                             <input
@@ -276,13 +288,13 @@ export default function ProfilePage() {
                                 <div className="mt-2 relative">
                                     <div
                                         className="h-16 rounded-lg bg-cover bg-center"
-                                        style={{ backgroundImage: `url(${background.value})` }}
+                                        style={{backgroundImage: `url(${background.value})`}}
                                     />
                                     <button
                                         onClick={removeCustomBg}
                                         className="absolute top-1 right-1 bg-black bg-opacity-50 text-white p-1 rounded-full"
                                     >
-                                        <FaTimes className="text-xs" />
+                                        <FaTimes className="text-xs"/>
                                     </button>
                                 </div>
                             )}
@@ -294,8 +306,8 @@ export default function ProfilePage() {
                 <div className={`${isEditing ? 'opacity-0 h-0' : ''}`}>
                     <h1 className="text-2xl font-bold text-center truncate px-4 mb-1">{name}</h1>
                     <div className="flex justify-center">
-                        <div className={`flex items-center ${currentTheme === 'dark' ? 'bg-gray-700 text-blue-300' : 'bg-blue-100 text-blue-800'} px-4 py-1 rounded-full shadow`}>
-                            <GiCoins className="text-yellow-500 text-lg mr-1" />
+                        <div className={`flex items-center ${currentTheme === 'dark' ? 'bg-gray-700 text-blue-300' : 'bg-[#576ecb] text-[#FFFFFF]'} px-4 py-1 rounded-full shadow`}>
+                            <GiCoins className="text-yellow-300 text-lg mr-1"/>
                             <span className="font-medium">{coins} монет</span>
                         </div>
                     </div>
@@ -303,15 +315,15 @@ export default function ProfilePage() {
 
                 {/* Статистика */}
                 <div className={`grid grid-cols-3 gap-2 my-4 ${isEditing ? 'opacity-0 h-0' : ''}`}>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white bg-opacity-90'}`}>
+                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
                         <div className="text-lg font-bold">124</div>
                         <div className="text-xs opacity-80">Постов</div>
                     </div>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white bg-opacity-90'}`}>
+                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
                         <div className="text-lg font-bold">1.2K</div>
                         <div className="text-xs opacity-80">Подписчиков</div>
                     </div>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white bg-opacity-90'}`}>
+                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
                         <div className="text-lg font-bold">56</div>
                         <div className="text-xs opacity-80">Подписок</div>
                     </div>
@@ -319,26 +331,26 @@ export default function ProfilePage() {
 
                 {/* Настройки */}
                 {!isEditing && (
-                    <div className={`rounded-xl overflow-hidden shadow-lg mb-16 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                        <div className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-gray-200'} font-medium`}>
+                    <div className={`rounded-xl overflow-hidden shadow-lg mb-16 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
+                        <div className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'} font-medium`}>
                             Настройки
                         </div>
 
-                        <div className="divide-y divide-gray-200">
+                        <div className="divide-y divide-[#576ecb]">
                             <button className="w-full text-left p-4 flex items-center justify-between">
                                 <div>Уведомления</div>
-                                <div className={`text-sm ${currentTheme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Включены</div>
+                                <div className="text-sm text-[#bbb2f0]">Включены</div>
                             </button>
                             <button className="w-full text-left p-4 flex items-center justify-between">
                                 <div>Конфиденциальность</div>
-                                <div className={`text-sm ${currentTheme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Только друзья</div>
+                                <div className="text-sm text-[#bbb2f0]">Только друзья</div>
                             </button>
                             <button
                                 className="w-full text-left p-4 flex items-center justify-between"
                                 onClick={() => setShowThemeModal(true)}
                             >
                                 <div>Тема оформления</div>
-                                <div className={`text-sm ${currentTheme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <div className="text-sm text-[#bbb2f0]">
                                     {currentTheme === 'light' ? 'Светлая' : currentTheme === 'dark' ? 'Темная' : 'Системная'}
                                 </div>
                             </button>
@@ -347,33 +359,38 @@ export default function ProfilePage() {
                 )}
             </div>
 
+
+
             {/* Модальное окно выбора темы */}
             {showThemeModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className={`rounded-xl w-full max-w-md ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow-2xl`}>
-                        <div className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-gray-200'} font-medium`}>
+                    <div
+                        className={`rounded-xl w-full max-w-md ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'} shadow-2xl`}>
+                        <div
+                            className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'} font-medium`}>
                             Выберите тему оформления
                         </div>
 
-                        <div className="divide-y divide-gray-200">
+                        <div className="divide-y divide-[#576ecb]">
                             {themes.map(theme => (
                                 <button
                                     key={theme.id}
-                                    className={`w-full text-left p-4 flex items-center ${currentTheme === theme.id ? (currentTheme === 'dark' ? 'bg-gray-700 text-blue-400' : 'bg-blue-50 text-blue-600') : ''}`}
+                                    className={`w-full text-left p-4 flex items-center ${currentTheme === theme.id ? 'bg-[#233e85] text-[#bbb2f0]' : 'text-white'}`}
                                     onClick={() => changeTheme(theme.id)}
                                 >
                                     <div className="mr-3">{theme.icon}</div>
                                     <div>{theme.name}</div>
                                     {currentTheme === theme.id && (
-                                        <div className="ml-auto text-blue-500">✓</div>
+                                        <div className="ml-auto text-[#bbb2f0]">✓</div>
                                     )}
                                 </button>
                             ))}
                         </div>
 
-                        <div className={`p-4 flex justify-end border-t ${currentTheme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+                        <div
+                            className={`p-4 flex justify-end border-t ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'}`}>
                             <button
-                                className={`px-4 py-2 rounded-lg ${currentTheme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+                                className="px-4 py-2 rounded-lg bg-[#576ecb] text-white hover:bg-[#233e85]"
                                 onClick={() => setShowThemeModal(false)}
                             >
                                 Закрыть
