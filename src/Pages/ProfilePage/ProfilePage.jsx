@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa';
 import { GiCoins } from 'react-icons/gi';
 import { useState, useRef } from 'react';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const AvatarFrame = ({ frame, selected, onClick }) => {
     return (
@@ -129,9 +129,9 @@ export default function ProfilePage() {
     };
 
     return (
-        <div className={`min-h-screen ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-[#1c2562] text-white'}`}>
+        <div className={`min-h-screen flex flex-col ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-[#1c2562] text-white'}`}>
             {/* Фон профиля с аватаром */}
-            <div className={`relative h-64 ${background.type === 'gradient' ? `bg-gradient-to-r ${background.value}` : ''}`}>
+            <div className={`relative h-64 flex-shrink-0 ${background.type === 'gradient' ? `bg-gradient-to-r ${background.value}` : ''}`}>
                 {background.type === 'custom' && (
                     <div
                         className="absolute inset-0 bg-cover bg-center"
@@ -139,9 +139,10 @@ export default function ProfilePage() {
                     />
                 )}
 
-                {/* Аватар с рамкой */}
-                <div className="absolute bottom-10 left-1/4 transform -translate-x-1/2">
-                    <div className="relative">
+                {/* Контейнер для аватара и информации */}
+                <div className="absolute bottom-0 left-0 right-0 flex items-end p-4 gap-4">
+                    {/* Аватар с рамкой */}
+                    <div className="relative -mb-8">
                         {selectedFrame > 0 ? (
                             <div className="relative w-32 h-32">
                                 <svg viewBox="0 0 100 100" className="absolute inset-0">
@@ -171,6 +172,25 @@ export default function ProfilePage() {
                             </div>
                         )}
                     </div>
+
+                    {/* Блок с именем, тегом и монетами */}
+                    <div className="flex-1">
+                        {!isEditing && (
+                            <>
+                                <h1 className="text-2xl font-bold text-white drop-shadow-md">{name}</h1>
+                                <div className="flex items-center gap-2 mt-2 mb-4">
+                                    <div className="bg-[#576ecb] text-white px-3 py-1 rounded-full flex items-center shadow-md max-w-full">
+                                        <FaUserTag className="mr-1 flex-shrink-0"/>
+                                        <span className="text-sm font-medium truncate">@{username}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center bg-[#233e85] text-white px-3 py-1 rounded-full shadow">
+                                    <GiCoins className="text-yellow-300 text-lg mr-1"/>
+                                    <span className="font-medium">{coins} монет</span>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {/* Кнопка редактирования */}
@@ -182,16 +202,8 @@ export default function ProfilePage() {
                 </button>
             </div>
 
-            {/* Контент профиля */}
-            <div className="relative px-4 pt-16">
-                {/* Тег профиля */}
-                <div className="flex justify-center mb-4">
-                    <div className="bg-[#576ecb] text-white px-3 py-1 rounded-full flex items-center shadow-md max-w-full">
-                        <FaUserTag className="mr-1 flex-shrink-0"/>
-                        <span className="text-sm font-medium truncate">@{username}</span>
-                    </div>
-                </div>
-
+            {/* Основной контент с прокруткой */}
+            <div className="flex-1 overflow-y-auto px-4 pt-5 pb-20">
                 {/* Редактирование профиля */}
                 {isEditing && (
                     <div className={`mb-4 p-4 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'} shadow-lg`}>
@@ -302,36 +314,27 @@ export default function ProfilePage() {
                     </div>
                 )}
 
-                {/* Имя и монеты */}
-                <div className={`${isEditing ? 'opacity-0 h-0' : ''}`}>
-                    <h1 className="text-2xl font-bold text-center truncate px-4 mb-1">{name}</h1>
-                    <div className="flex justify-center">
-                        <div className={`flex items-center ${currentTheme === 'dark' ? 'bg-gray-700 text-blue-300' : 'bg-[#576ecb] text-[#FFFFFF]'} px-4 py-1 rounded-full shadow`}>
-                            <GiCoins className="text-yellow-300 text-lg mr-1"/>
-                            <span className="font-medium">{coins} монет</span>
+                {/* Статистика */}
+                {!isEditing && (
+                    <div className="grid grid-cols-3 gap-2 my-4">
+                        <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
+                            <div className="text-lg font-bold">124</div>
+                            <div className="text-xs opacity-80">Постов</div>
+                        </div>
+                        <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
+                            <div className="text-lg font-bold">1.2K</div>
+                            <div className="text-xs opacity-80">Подписчиков</div>
+                        </div>
+                        <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
+                            <div className="text-lg font-bold">56</div>
+                            <div className="text-xs opacity-80">Подписок</div>
                         </div>
                     </div>
-                </div>
-
-                {/* Статистика */}
-                <div className={`grid grid-cols-3 gap-2 my-4 ${isEditing ? 'opacity-0 h-0' : ''}`}>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
-                        <div className="text-lg font-bold">124</div>
-                        <div className="text-xs opacity-80">Постов</div>
-                    </div>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
-                        <div className="text-lg font-bold">1.2K</div>
-                        <div className="text-xs opacity-80">Подписчиков</div>
-                    </div>
-                    <div className={`rounded-lg p-3 text-center shadow ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
-                        <div className="text-lg font-bold">56</div>
-                        <div className="text-xs opacity-80">Подписок</div>
-                    </div>
-                </div>
+                )}
 
                 {/* Настройки */}
                 {!isEditing && (
-                    <div className={`rounded-xl overflow-hidden shadow-lg mb-16 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
+                    <div className={`rounded-xl overflow-hidden shadow-lg mb-6 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'}`}>
                         <div className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'} font-medium`}>
                             Настройки
                         </div>
@@ -359,15 +362,30 @@ export default function ProfilePage() {
                 )}
             </div>
 
-
+            {/* Подвал */}
+            <footer className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
+                <div className="flex justify-around">
+                    <Link to="/" className="flex flex-col items-center text-[#8e83e4]">
+                        <FaHome className="text-xl"/>
+                        <span className="text-xs mt-1">Главная</span>
+                    </Link>
+                    <div className="flex flex-col items-center text-[#bcd8f6]">
+                        <FaUserTag className="text-xl"/>
+                        <span className="text-xs mt-1">Профиль</span>
+                        <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>
+                    </div>
+                    <Link to="/store" className="flex flex-col items-center text-[#8e83e4]">
+                        <FaStore className="text-xl"/>
+                        <span className="text-xs mt-1">Магазин</span>
+                    </Link>
+                </div>
+            </footer>
 
             {/* Модальное окно выбора темы */}
             {showThemeModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div
-                        className={`rounded-xl w-full max-w-md ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'} shadow-2xl`}>
-                        <div
-                            className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'} font-medium`}>
+                    <div className={`rounded-xl w-full max-w-md ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-[#35518e]'} shadow-2xl`}>
+                        <div className={`p-4 border-b ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'} font-medium`}>
                             Выберите тему оформления
                         </div>
 
@@ -387,8 +405,7 @@ export default function ProfilePage() {
                             ))}
                         </div>
 
-                        <div
-                            className={`p-4 flex justify-end border-t ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'}`}>
+                        <div className={`p-4 flex justify-end border-t ${currentTheme === 'dark' ? 'border-gray-700' : 'border-[#576ecb]'}`}>
                             <button
                                 className="px-4 py-2 rounded-lg bg-[#576ecb] text-white hover:bg-[#233e85]"
                                 onClick={() => setShowThemeModal(false)}

@@ -1,4 +1,4 @@
-import {FaCoins, FaBell, FaHome, FaStore, FaUsers, FaChevronRight, FaSearch, FaUserTag} from 'react-icons/fa';
+import {FaCoins, FaBell, FaHome, FaStore, FaUsers, FaNewspaper, FaChevronRight, FaSearch, FaUserTag} from 'react-icons/fa';
 import { GiCoins } from 'react-icons/gi';
 import { IoIosNotifications } from 'react-icons/io';
 import './App.css';
@@ -8,6 +8,7 @@ import ProfilePage from "./Pages/ProfilePage/ProfilePage.jsx";
 import MainPage from "./Pages/MainPage/MainPage.jsx";
 import {AnimatePresence, motion} from "framer-motion";
 import StorePage from "./Pages/StorePage/StorePage.jsx";
+import NewsPage from "./Pages/NewsPage/NewsPage.jsx";
 
 export default function App() {
     const location = useLocation();
@@ -36,16 +37,7 @@ export default function App() {
                            <ProfilePage/>
                        </motion.div>
                    }/>
-                   <Route path="/profile" element={
-                       <motion.div
-                           initial={{ x: 300, opacity: 0.5 }}
-                           animate={{ x: 0, opacity: 1 }}
-                           exit={{ x: -3000, opacity: 0.5 }}
-                           transition={{ duration: 0.3 }}
-                       >
-                           <ProfilePage/>
-                       </motion.div>
-                   }/>
+
                    <Route path="/store" element={
                        <motion.div
                            initial={{ x: 300, opacity: 0.5 }}
@@ -56,7 +48,16 @@ export default function App() {
                            <StorePage />
                        </motion.div>
                    }/>
-                   {/*<Route path="/communities" element={<CommunitiesPage />} />*/}
+                   <Route path="/news" element={
+                       <motion.div
+                           initial={{ x: 300, opacity: 0.5 }}
+                           animate={{ x: 0, opacity: 1 }}
+                           exit={{ x: -3000, opacity: 0.5 }}
+                           transition={{ duration: 0.3 }}
+                       >
+                           <NewsPage/>
+                       </motion.div>
+                   }/>
                </Routes>
            </AnimatePresence>
            {/* Подвал */}
@@ -83,10 +84,10 @@ export default function App() {
                            active: location.pathname === "/store"
                        },
                        {
-                           icon: <FaUsers className="text-xl"/>,
-                           name: "Сообщества",
-                           path: "/communities",
-                           active: location.pathname === "/communities"
+                           icon: <FaNewspaper className="text-xl"/>,
+                           name: "Новости",
+                           path: "/news",
+                           active: location.pathname === "/news"
                        }
                    ].map((item, index) => (
                        <Link
