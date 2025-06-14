@@ -3,3 +3,6 @@
 html, body {
     background-color: #1c2562;
 }
+em {
+    font-style: italic;
+}

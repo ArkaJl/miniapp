@@ -1,4 +1,15 @@
-import {FaCoins, FaBell, FaHome, FaStore, FaUsers, FaNewspaper, FaChevronRight, FaSearch, FaUserTag} from 'react-icons/fa';
+import {
+    FaCoins,
+    FaBell,
+    FaHome,
+    FaStore,
+    FaUsers,
+    FaNewspaper,
+    FaChevronRight,
+    FaSearch,
+    FaUserTag,
+    FaPlus
+} from 'react-icons/fa';
 import { GiCoins } from 'react-icons/gi';
 import { IoIosNotifications } from 'react-icons/io';
 import './App.css';
@@ -9,9 +20,21 @@ import MainPage from "./Pages/MainPage/MainPage.jsx";
 import {AnimatePresence, motion} from "framer-motion";
 import StorePage from "./Pages/StorePage/StorePage.jsx";
 import NewsPage from "./Pages/NewsPage/NewsPage.jsx";
+import CommunityCover from "./Components/CommunityCover/CommunityCover.jsx";
+import PostCreator from "./Components/PostCreator/PostCreator.jsx";
+import {useState} from "react";
+import CommunityPage from "./Pages/CommunityPage.jsx";
 
 export default function App() {
     const location = useLocation();
+
+    const [showPostCreator, setShowPostCreator] = useState(false);
+
+    const handlePublish = (postData) => {
+        console.log('Публикуем пост:', postData);
+        // Здесь будет логика отправки на сервер
+        setShowPostCreator(false);
+    };
 
     return (
        <div>
@@ -58,50 +81,102 @@ export default function App() {
                            <NewsPage/>
                        </motion.div>
                    }/>
+                   <Route path="/communitie" element={
+                       <motion.div
+                           initial={{ opacity: 0, y: -20 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           exit={{ opacity: 0, y: -20 }}
+                           transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                       >
+                           <CommunityCover
+                               avatar="https://source.unsplash.com/random/200x200/?profile"
+                               background1="https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg"
+                               name="Крутое сообщество"
+                               tags={["разработка", "дизайн", "анимации", "vite"]}
+                               description="Добро пожаловать в наше сообщество! Мы занимаемся созданием крутых проектов с использованием современных технологий. Присоединяйтесь к нам!"
+                               descriptionImages={[
+                                   "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
+                                   "https://i.pinimg.com/736x/2f/d1/69/2fd169a01f723c082fd4e8dd65bbface.jpg"
+                               ]}
+                           />
+                       </motion.div>
+                   }/>
+                   <Route path="/communitie-mainpage" element={
+                       <motion.div
+                           initial={{ opacity: 0, y: -20 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           exit={{ opacity: 0, y: -20 }}
+                           transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                       >
+                            <CommunityPage/>
+                       </motion.div>
+                   }/>
                </Routes>
            </AnimatePresence>
-           {/* Подвал */}
-           <footer
-               className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
-               <div className="flex justify-around">
-                   {[
-                       {
-                           icon: <FaHome className="text-xl"/>,
-                           name: "Главная",
-                           path: "/",
-                           active: location.pathname === "/"
-                       },
-                       {
-                           icon: <FaUserTag className="text-xl"/>,
-                           name: "Профиль",
-                           path: "/profile",
-                           active: location.pathname === "/profile"
-                       },
-                       {
-                           icon: <FaStore className="text-xl"/>,
-                           name: "Магазин",
-                           path: "/store",
-                           active: location.pathname === "/store"
-                       },
-                       {
-                           icon: <FaNewspaper className="text-xl"/>,
-                           name: "Новости",
-                           path: "/news",
-                           active: location.pathname === "/news"
-                       }
-                   ].map((item, index) => (
-                       <Link
-                           key={index}
-                           to={item.path}
-                           className={`flex flex-col items-center ${item.active ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}
+
+           {/*создать пост*/}
+           <div>
+               {showPostCreator ? (
+                   <PostCreator
+                       onBack={() => setShowPostCreator(false)}
+                       onPublish={handlePublish}
+                   />
+               ) : (
+                   <div>
+                       {/* Контент сообщества */}
+                       <button
+                           onClick={() => setShowPostCreator(true)}
+                           className="mb-18 fixed bottom-6 right-6 bg-[#a45cd4] text-white p-4 rounded-full shadow-lg hover:bg-[#8e83e4] transition-colors"
                        >
-                           {item.icon}
-                           <span className="text-xs mt-1">{item.name}</span>
-                           {item.active && <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>}
-                       </Link>
-                   ))}
-               </div>
-           </footer>
+                           <FaPlus className="text-xl"/>
+                       </button>
+                   </div>
+               )}
+           </div>
+
+
+           {/* Подвал */}
+           {/*<footer*/}
+           {/*    className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">*/}
+           {/*    <div className="flex justify-around">*/}
+           {/*        {[*/}
+           {/*            {*/}
+           {/*                icon: <FaHome className="text-xl"/>,*/}
+           {/*                name: "Главная",*/}
+           {/*                path: "/",*/}
+           {/*                active: location.pathname === "/"*/}
+           {/*            },*/}
+           {/*            {*/}
+           {/*                icon: <FaUserTag className="text-xl"/>,*/}
+           {/*                name: "Профиль",*/}
+           {/*                path: "/profile",*/}
+           {/*                active: location.pathname === "/profile"*/}
+           {/*            },*/}
+           {/*            {*/}
+           {/*                icon: <FaStore className="text-xl"/>,*/}
+           {/*                name: "Магазин",*/}
+           {/*                path: "/store",*/}
+           {/*                active: location.pathname === "/store"*/}
+           {/*            },*/}
+           {/*            {*/}
+           {/*                icon: <FaNewspaper className="text-xl"/>,*/}
+           {/*                name: "Новости",*/}
+           {/*                path: "/news",*/}
+           {/*                active: location.pathname === "/news"*/}
+           {/*            }*/}
+           {/*        ].map((item, index) => (*/}
+           {/*            <Link*/}
+           {/*                key={index}*/}
+           {/*                to={item.path}*/}
+           {/*                className={`flex flex-col items-center ${item.active ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}*/}
+           {/*            >*/}
+           {/*                {item.icon}*/}
+           {/*                <span className="text-xs mt-1">{item.name}</span>*/}
+           {/*                {item.active && <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>}*/}
+           {/*            </Link>*/}
+           {/*        ))}*/}
+           {/*    </div>*/}
+           {/*</footer>*/}
        </div>
     );
 }

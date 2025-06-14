@@ -1,11 +1,6 @@
 /* styles.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Базовые стили */
-body {
-    font-family: 'Inter', sans-serif;
-}
-
 /* Кастомные цвета для Tailwind */
 .bg-primary-light {
     background-color: #85b7ef;
@@ -179,7 +174,7 @@ body {
     transform: scale(1.03);
 }
 .background-img {
-    background-image: url("https://i.pinimg.com/originals/e4/75/85/e475855ee5fe583d2117e94612ae7050.jpg");
+    background-image: url("/background.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
