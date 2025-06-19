@@ -62,12 +62,12 @@ const Post = ({
 
             {/* Заголовок */}
             <div className="px-4 pb-3">
-                <h2 className="text-xl font-bold text-white">{title}</h2>
+                <h2 className="text-ml font-bold text-white">{title}</h2>
             </div>
 
             {/* Изображение */}
             {image && (
-                <div className="w-full aspect-square bg-[#14102a] overflow-hidden">
+                <div className="w-full aspect-square bg-[#14102a] overflow-hidden h-70">
                     <img
                         src={image}
                         alt={title}

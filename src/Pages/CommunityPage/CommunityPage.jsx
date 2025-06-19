@@ -2,29 +2,32 @@ import { useState, useEffect } from "react";
 import {
     FaArrowLeft,
     FaBell,
-    FaHome,
     FaUsers,
     FaComments,
-    FaImages,
     FaUser,
     FaBars,
-    FaStore
+    FaStore, FaPlus
 } from 'react-icons/fa';
 import { GiCoins, GiBo } from 'react-icons/gi';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
-import Post from "/src/Components/Post/Post.jsx";
+import HomeTab from "/src/Components/Community/HomeTab.jsx";
+import ChatsTab from "../../Components/Community/ChatsTab.jsx";
+import AlbumsTab from "../../Components/Community/AlbumsTab.jsx";
+import SubsTab from "../../Components/Community/SubsTab.jsx";
+import PostCreator from "../../Components/PostCreator/PostCreator.jsx";
 
 const CommunityPage = () => {
     const [activeTab, setActiveTab] = useState('home');
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [posts, setPosts] = useState([
         {
             id: 1,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
             title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             likesCount: 24,
             sharesCount: 5,
             commentsCount: 8,
@@ -32,36 +35,35 @@ const CommunityPage = () => {
         },
         {
             id: 2,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
-            likesCount: 24,
-            sharesCount: 5,
-            commentsCount: 8,
-            date: '2 часа назад'
+            title: 'Это мой второй пост в этом сообществе!',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
+            likesCount: 15,
+            sharesCount: 3,
+            commentsCount: 5,
+            date: '5 часов назад'
         },
         {
             id: 3,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
-            likesCount: 24,
-            sharesCount: 5,
-            commentsCount: 8,
-            date: '2 часа назад'
+            title: 'Это мой третий пост в этом сообществе!',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
+            likesCount: 42,
+            sharesCount: 12,
+            commentsCount: 7,
+            date: '1 день назад'
         },
-        // ... остальные посты
     ]);
 
     const featuredContent = [
         {
             id: 1,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
+            title: 'Лучший контент сообщества!',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             likesCount: 24,
             sharesCount: 5,
             commentsCount: 8,
@@ -69,10 +71,10 @@ const CommunityPage = () => {
         },
         {
             id: 2,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
+            title: 'Интересные события',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             likesCount: 24,
             sharesCount: 5,
             commentsCount: 8,
@@ -80,10 +82,10 @@ const CommunityPage = () => {
         },
         {
             id: 3,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
+            title: 'Новости сообщества',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             likesCount: 24,
             sharesCount: 5,
             commentsCount: 8,
@@ -91,10 +93,10 @@ const CommunityPage = () => {
         },
         {
             id: 4,
-            authorAvatar: 'https://source.unsplash.com/random/200x200/?profile1',
+            authorAvatar: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             authorName: 'User1',
-            title: 'Это мой первый пост в этом сообществе!',
-            image: 'https://source.unsplash.com/random/600x400/?nature1',
+            title: 'Анонсы мероприятий',
+            image: 'https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg',
             likesCount: 24,
             sharesCount: 5,
             commentsCount: 8,
@@ -111,25 +113,77 @@ const CommunityPage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Эффект для отслеживания размера экрана
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     // Анимация для шапки
     const headerHeight = useTransform(
         useScroll().scrollY,
         [0, 100],
-        ['180px', '120px']
+        [isMobile ? '180px' : '220px', isMobile ? '120px' : '150px']
     );
 
     const avatarSize = useTransform(
         useScroll().scrollY,
         [0, 100],
-        ['60px', '40px']
+        [isMobile ? '60px' : '80px', isMobile ? '40px' : '60px']
     );
 
     const handleLike = (postId, isLiked) => {
-        // ... существующая функция
+        setPosts(posts.map(post =>
+            post.id === postId
+                ? { ...post, likesCount: isLiked ? post.likesCount - 1 : post.likesCount + 1 }
+                : post
+        ));
     };
 
     const handlePostClick = (postId) => {
-        // ... существующая функция
+        console.log(`Post ${postId} clicked`);
+    };
+
+    // Функция для рендеринга активной вкладки
+    const renderActiveTab = () => {
+        switch (activeTab) {
+            case 'home':
+                return (
+                    <HomeTab
+                        featuredContent={featuredContent}
+                        posts={posts}
+                        isMobile={isMobile}
+                        handleLike={handleLike}
+                        handlePostClick={handlePostClick}
+                    />
+                );
+            case 'subs':
+                return (
+                    <SubsTab
+                        posts={posts}
+                        isMobile={isMobile}
+                        handleLike={handleLike}
+                        handlePostClick={handlePostClick}
+                    />
+                );
+            case 'chats':
+                return <ChatsTab isMobile={isMobile} />;
+            case 'albums':
+                return <AlbumsTab isMobile={isMobile} />;
+            default:
+                return null;
+        }
+    };
+
+    const [showPostCreator, setShowPostCreator] = useState(false);
+
+    const handlePublish = (postData) => {
+        console.log('Публикуем пост:', postData);
+        // Здесь будет логика отправки на сервер
+        setShowPostCreator(false);
     };
 
     return (
@@ -145,16 +199,16 @@ const CommunityPage = () => {
                     style={{ scale: useTransform(useScroll().scrollY, [0, 100], [1, 1.1]) }}
                 >
                     <img
-                        src="https://source.unsplash.com/random/800x200/?community,background"
+                        src="https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg"
                         alt="Community background"
                         className="w-full h-full object-cover opacity-30"
                     />
                 </motion.div>
 
-                <div className="relative z-10 p-4 h-full flex flex-col justify-end">
+                <div className={`relative z-10 ${isMobile ? 'p-4' : 'p-6'} h-full flex flex-col justify-end`}>
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center">
-                            <Link to="/" className="mr-3">
+                            <Link to="/public" className="mr-3">
                                 <FaArrowLeft className="text-xl" />
                             </Link>
                             <motion.div
@@ -166,15 +220,15 @@ const CommunityPage = () => {
                                 }}
                             >
                                 <img
-                                    src="https://source.unsplash.com/random/200x200/?community"
+                                    src="https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg"
                                     alt="Community"
                                     className="w-full h-full object-cover"
                                 />
                             </motion.div>
                             <motion.h1
-                                className="ml-3 font-bold text-lg truncate max-w-[120px]"
+                                className={`ml-3 font-bold ${isMobile ? 'text-lg' : 'text-xl'} truncate ${isMobile ? 'max-w-[120px]' : 'max-w-[240px]'}`}
                                 animate={{
-                                    fontSize: isScrolled ? '1rem' : '1.25rem',
+                                    fontSize: isScrolled ? (isMobile ? '1rem' : '1.25rem') : (isMobile ? '1.25rem' : '1.5rem'),
                                     opacity: isScrolled ? 0.9 : 1
                                 }}
                             >
@@ -222,7 +276,7 @@ const CommunityPage = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`pb-2 px-1 relative ${activeTab === tab.id ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}
+                                className={`pb-2 px-1 relative ${activeTab === tab.id ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'} ${!isMobile ? 'px-4' : ''}`}
                             >
                                 {tab.name}
                                 {activeTab === tab.id && (
@@ -238,89 +292,35 @@ const CommunityPage = () => {
             </motion.header>
 
             {/* Основной контент */}
-            <main className="p-4 pt-6">
-                {/* Подборка контента */}
-                {activeTab === 'home' && (
-                    <section className="mb-6">
-                        <div className="grid grid-cols-2 gap-3 mb-3">
-                            {/* Главный элемент подборки */}
-                            <motion.div
-                                className="col-span-2 rounded-xl overflow-hidden relative h-48"
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <img
-                                    src={featuredContent[0].image}
-                                    alt={featuredContent[0].title}
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
-                                    <h3 className="font-bold text-white">{featuredContent[0].title}</h3>
-                                </div>
-                            </motion.div>
-
-                            {/* Два второстепенных элемента */}
-                            {featuredContent.slice(1, 3).map(item => (
-                                <motion.div
-                                    key={item.id}
-                                    className="rounded-xl overflow-hidden relative h-32"
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
-                                        <h3 className="font-bold text-white text-sm">{item.title}</h3>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {/* Горизонтальная лента подборки */}
-                        <div className="overflow-x-auto pb-2 scrollbar-hide">
-                            <div className="flex space-x-3 w-max">
-                                {featuredContent.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        className="flex-shrink-0 w-32 rounded-xl overflow-hidden relative h-24"
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        <img
-                                            src={item.image}
-                                            alt={item.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
-                                            <h3 className="font-bold text-white text-xs">{item.title}</h3>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* Лента постов */}
-                <section>
-                    {activeTab === 'home' && (
-                        <div className="space-y-4">
-                            {posts.map(post => (
-                                <Post
-                                    key={post.id}
-                                    {...post}
-                                    onLike={handleLike}
-                                    onPostClick={handlePostClick}
-                                />
-                            ))}
-                        </div>
-                    )}
-                    {/* ... остальные вкладки */}
-                </section>
+            <main className={`${isMobile ? 'p-4' : 'p-6'} pt-6`}>
+                {renderActiveTab()}
             </main>
 
+            {/* Кнопка создания поста */}
+            {!showPostCreator && (
+                <motion.button
+                    onClick={() => setShowPostCreator(true)}
+                    className="fixed bottom-24 right-6 bg-[#a45cd4] text-white p-4 rounded-full shadow-lg hover:bg-[#8e83e4] transition-colors z-40"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    <FaPlus className="text-xl"/>
+                </motion.button>
+            )}
+
+            {/* Модальное окно создания поста */}
+            {showPostCreator && (
+                <div className="fixed inset-0 bg-black/80 z-50 flex flex-col">
+                    <PostCreator
+                        onBack={() => setShowPostCreator(false)}
+                        onPublish={handlePublish}
+                        className="flex-1"
+                    />
+                </div>
+            )}
+
             {/* Футер */}
-            <footer className="fixed bottom-0 left-0 right-0 bg-[#14102a] border-t border-[#35518e] p-3 shadow-md z-50">
+            {!showPostCreator && <footer className="fixed bottom-0 left-0 right-0 bg-[#14102a] border-t border-[#35518e] p-3 shadow-md z-30">
                 <div className="flex justify-around">
                     <button className="flex flex-col items-center text-[#8e83e4]">
                         <FaUsers className="text-xl" />
@@ -343,7 +343,7 @@ const CommunityPage = () => {
                         <span className="text-xs mt-1">Профиль</span>
                     </button>
                 </div>
-            </footer>
+            </footer>}
         </div>
     );
 };

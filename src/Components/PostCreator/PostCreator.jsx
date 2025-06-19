@@ -498,7 +498,7 @@ const PostCreator = ({ onBack, onPublish }) => {
 
             {/* Кнопки действий */}
             <div
-                className="mb-18 fixed bottom-0 left-0 right-0 bg-[#f5f7fa] p-4 border-t border-[#8e83e4] flex justify-between">
+                className="mb-0 fixed bottom-0 left-0 right-0 bg-[#f5f7fa] p-4 border-t border-[#8e83e4] flex justify-between">
                 <button
                     onClick={() => setPreviewVisible(true)}
                     disabled={!content && images.length === 0}
