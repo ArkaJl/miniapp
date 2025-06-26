@@ -43,7 +43,7 @@ const AlbumsTab = ({ isMobile }) => {
     ];
 
     return (
-        <div className="p-4">
+        <div className="p-4 mb-18">
             {/* Заголовок секции */}
             <h2 className="text-xl font-bold mb-4 text-white">Альбомы сообщества</h2>
 

@@ -22,10 +22,22 @@ import StorePage from "./Pages/StorePage/StorePage.jsx";
 import NewsPage from "./Pages/NewsPage/NewsPage.jsx";
 import CommunityCover from "./Components/CommunityCover/CommunityCover.jsx";
 import CommunityPage from "./Pages/CommunityPage/CommunityPage.jsx";
+import MembersPage from "./Pages/MembersPage/MembersPage.jsx";
+import {useEffect, useState} from "react";
+import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
 
 export default function App() {
     const location = useLocation();
     const footerPaths = ['/', '/profile', '/store', '/news'];
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <div>
@@ -98,7 +110,27 @@ export default function App() {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
                         >
-                            <CommunityPage/>
+                            <CommunityPage isMobile={isMobile}/>
+                        </motion.div>
+                    }/>
+                    <Route path="/communitie-memberspage" element={
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        >
+                            <MembersPage isMobile={isMobile}/>
+                        </motion.div>
+                    }/>
+                    <Route path="/communitie-chatspage" element={
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        >
+                            <ChatsPage isMobile={isMobile}/>
                         </motion.div>
                     }/>
                 </Routes>
