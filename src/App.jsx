@@ -15,7 +15,7 @@ import { IoIosNotifications } from 'react-icons/io';
 import './App.css';
 import {BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation} from 'react-router-dom';
 
-import ProfilePage from "./Pages/ProfilePage/ProfilePage.jsx";
+import ProfilePageMain from "./Pages/ProfilePage/ProfilePageMain.jsx";
 import MainPage from "./Pages/MainPage/MainPage.jsx";
 import {AnimatePresence, motion} from "framer-motion";
 import StorePage from "./Pages/StorePage/StorePage.jsx";
@@ -25,6 +25,7 @@ import CommunityPage from "./Pages/CommunityPage/CommunityPage.jsx";
 import MembersPage from "./Pages/MembersPage/MembersPage.jsx";
 import {useEffect, useState} from "react";
 import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
+import ProfilePage from "./Pages/ProfilePageCommunity/ProfilePage.jsx";
 
 export default function App() {
     const location = useLocation();
@@ -60,7 +61,7 @@ export default function App() {
                             exit={{ x: -3000, opacity: 0.5 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <ProfilePage/>
+                            <ProfilePageMain/>
                         </motion.div>
                     }/>
                     <Route path="/store" element={
@@ -131,6 +132,16 @@ export default function App() {
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
                         >
                             <ChatsPage isMobile={isMobile}/>
+                        </motion.div>
+                    }/>
+                    <Route path="/communitie-profilepage" element={
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        >
+                            <ProfilePage/>
                         </motion.div>
                     }/>
                 </Routes>

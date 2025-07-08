@@ -22,10 +22,10 @@ const Footer = ({setIsMenuOpen}) => {
                     <FaBars className="text-xl"/>
                     <span className="text-xs mt-1">Меню</span>
                 </button>
-                <button className="flex flex-col items-center text-[#8e83e4]">
+                <Link to='/communitie-profilepage' className="flex flex-col items-center text-[#8e83e4]">
                     <FaUser className="text-xl"/>
                     <span className="text-xs mt-1">Профиль</span>
-                </button>
+                </Link>
             </div>
         </footer>
     );

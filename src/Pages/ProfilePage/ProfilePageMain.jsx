@@ -54,7 +54,7 @@ const AvatarFrame = ({ frame, selected, onClick }) => {
     );
 };
 
-export default function ProfilePage() {
+export default function ProfilePageMain() {
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [currentTheme, setCurrentTheme] = useState('light');
     const [coins, setCoins] = useState(150);

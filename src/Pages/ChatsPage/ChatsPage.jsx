@@ -5,8 +5,12 @@ import { BsFilterLeft, BsPencilSquare } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Footer from "../../Components/Community/Footer.jsx";
+import CommunityMenu from "../../Components/Community/CommunityMenu.jsx";
 
 const ChatsPage = ({ isMobile }) => {
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const [chats, setChats] = useState([
         {
             id: 1,
@@ -217,7 +221,15 @@ const ChatsPage = ({ isMobile }) => {
                 </motion.button>
             </div>
 
-            < Footer/>
+            <CommunityMenu
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                isAdmin={true} // или логика для проверки админки
+                communityName="Крутое сообщество"
+                coverImage="https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg"
+            />
+
+            < Footer setIsMenuOpen={setIsMenuOpen}/>
         </div>
     );
 };

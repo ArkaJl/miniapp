@@ -3,8 +3,11 @@ import { FaCrown, FaShieldAlt, FaUserCog, FaUser, FaSearch, FaArrowLeft, FaCircl
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Footer from "../../Components/Community/Footer.jsx";
+import CommunityMenu from "../../Components/Community/CommunityMenu.jsx";
 
 const MembersPage = ({ isMobile }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     // Моковые данные с разными ролями
     const [members, setMembers] = useState([
         { id: 1, name: 'Алексей Петров', role: 'Основатель', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', online: true, lastSeen: 'online' },
@@ -213,7 +216,16 @@ const MembersPage = ({ isMobile }) => {
                     </div>
                 )}
             </main>
-            <Footer/>
+
+            <CommunityMenu
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                isAdmin={true} // или логика для проверки админки
+                communityName="Крутое сообщество"
+                coverImage="https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg"
+            />
+
+            < Footer setIsMenuOpen={setIsMenuOpen}/>
         </div>
     );
 };
