@@ -27,6 +27,7 @@ import {useEffect, useState} from "react";
 import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
 import ProfilePage from "./Pages/ProfilePageCommunity/ProfilePage.jsx";
 import PostView from "./Components/PostView/PostView.jsx";
+import ProfileEditor from "./Components/ProfileEditor/ProfileEditor.jsx";
 
 export default function App() {
     const location = useLocation();
@@ -41,7 +42,7 @@ export default function App() {
                 "name": "Иван Петров",
                 "avatar": "https://example.com/avatars/user_123.jpg"
             },
-            "content": "Привет! Это мой первый пост![IMG]{{img1}}Как вам? [C]{{[B]{{Круто}}}} [EFFECT]{{hearts}}",
+            "content": "Привет! [SCROLL]{{ddjdjdjdjjddjdjdjdjjddjdjdjdjjddjdjdjdjjddjdjdjdjj}} Это [BG]{{img2 | Текст на фоне}} мой первый пост![IMG]{{img1}}Как вам? [C]{{[B]{{Круто}}}} [EFFECT]{{hearts}}",
             "images": [
                 {
                     "id": "img1",
@@ -49,11 +50,18 @@ export default function App() {
                     "altText": "Мое фото",
                     "width": 1200,
                     "height": 800
+                },
+                {
+                    "id": "img2",
+                    "dataUrl": "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
+                    "altText": "Мое фото",
+                    "width": 1200,
+                    "height": 800
                 }
             ],
             "styles": {
-                "bgColor": "#000959",
-                "textColor": "#f8f3f3"
+                "bgColor": "#b32525",
+                "textColor": "#000000"
             },
             "effects": ["hearts"],
             "likes": 42,
@@ -198,50 +206,52 @@ export default function App() {
             {/*    post={postData}*/}
             {/*/>*/}
 
+            <ProfileEditor/>
+
             {/* Подвал - отображается только на определенных путях */}
-            {footerPaths.includes(location.pathname) && (
-                <footer
-                    className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
-                    <div className="flex justify-around">
-                        {[
-                            {
-                                icon: <FaHome className="text-xl"/>,
-                                name: "Главная",
-                                path: "/",
-                                active: location.pathname === "/"
-                            },
-                            {
-                                icon: <FaUserTag className="text-xl"/>,
-                                name: "Профиль",
-                                path: "/profile",
-                                active: location.pathname === "/profile"
-                            },
-                            {
-                                icon: <FaStore className="text-xl"/>,
-                                name: "Магазин",
-                                path: "/store",
-                                active: location.pathname === "/store"
-                            },
-                            {
-                                icon: <FaNewspaper className="text-xl"/>,
-                                name: "Новости",
-                                path: "/news",
-                                active: location.pathname === "/news"
-                            }
-                        ].map((item, index) => (
-                            <Link
-                                key={index}
-                                to={item.path}
-                                className={`flex flex-col items-center ${item.active ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}
-                            >
-                                {item.icon}
-                                <span className="text-xs mt-1">{item.name}</span>
-                                {item.active && <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>}
-                            </Link>
-                        ))}
-                    </div>
-                </footer>
-            )}
+            {/*{footerPaths.includes(location.pathname) && (*/}
+            {/*    <footer*/}
+            {/*        className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">*/}
+            {/*        <div className="flex justify-around">*/}
+            {/*            {[*/}
+            {/*                {*/}
+            {/*                    icon: <FaHome className="text-xl"/>,*/}
+            {/*                    name: "Главная",*/}
+            {/*                    path: "/",*/}
+            {/*                    active: location.pathname === "/"*/}
+            {/*                },*/}
+            {/*                {*/}
+            {/*                    icon: <FaUserTag className="text-xl"/>,*/}
+            {/*                    name: "Профиль",*/}
+            {/*                    path: "/profile",*/}
+            {/*                    active: location.pathname === "/profile"*/}
+            {/*                },*/}
+            {/*                {*/}
+            {/*                    icon: <FaStore className="text-xl"/>,*/}
+            {/*                    name: "Магазин",*/}
+            {/*                    path: "/store",*/}
+            {/*                    active: location.pathname === "/store"*/}
+            {/*                },*/}
+            {/*                {*/}
+            {/*                    icon: <FaNewspaper className="text-xl"/>,*/}
+            {/*                    name: "Новости",*/}
+            {/*                    path: "/news",*/}
+            {/*                    active: location.pathname === "/news"*/}
+            {/*                }*/}
+            {/*            ].map((item, index) => (*/}
+            {/*                <Link*/}
+            {/*                    key={index}*/}
+            {/*                    to={item.path}*/}
+            {/*                    className={`flex flex-col items-center ${item.active ? 'text-[#bcd8f6]' : 'text-[#8e83e4]'}`}*/}
+            {/*                >*/}
+            {/*                    {item.icon}*/}
+            {/*                    <span className="text-xs mt-1">{item.name}</span>*/}
+            {/*                    {item.active && <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>}*/}
+            {/*                </Link>*/}
+            {/*            ))}*/}
+            {/*        </div>*/}
+            {/*    </footer>*/}
+            {/*)}*/}
         </div>
     );
 }
