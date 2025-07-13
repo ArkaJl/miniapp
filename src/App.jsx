@@ -26,11 +26,58 @@ import MembersPage from "./Pages/MembersPage/MembersPage.jsx";
 import {useEffect, useState} from "react";
 import ChatsPage from "./Pages/ChatsPage/ChatsPage.jsx";
 import ProfilePage from "./Pages/ProfilePageCommunity/ProfilePage.jsx";
+import PostView from "./Components/PostView/PostView.jsx";
 
 export default function App() {
     const location = useLocation();
     const footerPaths = ['/', '/profile', '/store', '/news'];
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+
+    const postData = {
+            "id": "post_abc123",
+            "author": {
+                "id": "user_123",
+                "name": "Иван Петров",
+                "avatar": "https://example.com/avatars/user_123.jpg"
+            },
+            "content": "Привет! Это мой первый пост![IMG]{{img1}}Как вам? [C]{{[B]{{Круто}}}} [EFFECT]{{hearts}}",
+            "images": [
+                {
+                    "id": "img1",
+                    "dataUrl": "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
+                    "altText": "Мое фото",
+                    "width": 1200,
+                    "height": 800
+                }
+            ],
+            "styles": {
+                "bgColor": "#000959",
+                "textColor": "#f8f3f3"
+            },
+            "effects": ["hearts"],
+            "likes": 42,
+            "comments": [
+                {
+                    "id": "comment_1",
+                    "author": {
+                        "id": "user_456",
+                        "name": "Мария Сидорова",
+                        "avatar": "https://example.com/avatars/user_456.jpg"
+                    },
+                    "text": "Отличный пост!",
+                    "createdAt": "2023-05-15T14:30:00Z"
+                }
+            ],
+            "createdAt": "2023-05-15T12:00:00Z",
+            "updatedAt": "2023-05-15T12:00:00Z",
+            "visibility": "public",
+            "tags": ["первый пост", "приветствие"],
+            "metadata": {
+                "wordCount": 15,
+                "readTime": 1
+            }
+        }
 
     useEffect(() => {
         const handleResize = () => {
@@ -46,50 +93,50 @@ export default function App() {
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={
                         <motion.div
-                            initial={{ x: 300, opacity: 0.5 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: -3000, opacity: 0.5 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{x: 300, opacity: 0.5}}
+                            animate={{x: 0, opacity: 1}}
+                            exit={{x: -3000, opacity: 0.5}}
+                            transition={{duration: 0.3}}
                         >
-                            <MainPage />
+                            <MainPage/>
                         </motion.div>
                     }/>
                     <Route path="/profile" element={
                         <motion.div
-                            initial={{ x: 300, opacity: 0.5 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: -3000, opacity: 0.5 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{x: 300, opacity: 0.5}}
+                            animate={{x: 0, opacity: 1}}
+                            exit={{x: -3000, opacity: 0.5}}
+                            transition={{duration: 0.3}}
                         >
                             <ProfilePageMain/>
                         </motion.div>
                     }/>
                     <Route path="/store" element={
                         <motion.div
-                            initial={{ x: 300, opacity: 0.5 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: -3000, opacity: 0.5 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{x: 300, opacity: 0.5}}
+                            animate={{x: 0, opacity: 1}}
+                            exit={{x: -3000, opacity: 0.5}}
+                            transition={{duration: 0.3}}
                         >
-                            <StorePage />
+                            <StorePage/>
                         </motion.div>
                     }/>
                     <Route path="/news" element={
                         <motion.div
-                            initial={{ x: 300, opacity: 0.5 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: -3000, opacity: 0.5 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{x: 300, opacity: 0.5}}
+                            animate={{x: 0, opacity: 1}}
+                            exit={{x: -3000, opacity: 0.5}}
+                            transition={{duration: 0.3}}
                         >
                             <NewsPage/>
                         </motion.div>
                     }/>
                     <Route path="/communitie" element={
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            initial={{opacity: 0, y: -20}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{type: "spring", damping: 25, stiffness: 300}}
                         >
                             <CommunityCover
                                 avatar="https://source.unsplash.com/random/200x200/?profile"
@@ -106,40 +153,40 @@ export default function App() {
                     }/>
                     <Route path="/communitie-mainpage" element={
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            initial={{opacity: 0, y: -20}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{type: "spring", damping: 25, stiffness: 300}}
                         >
                             <CommunityPage isMobile={isMobile}/>
                         </motion.div>
                     }/>
                     <Route path="/communitie-memberspage" element={
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            initial={{opacity: 0, y: -20}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{type: "spring", damping: 25, stiffness: 300}}
                         >
                             <MembersPage isMobile={isMobile}/>
                         </motion.div>
                     }/>
                     <Route path="/communitie-chatspage" element={
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            initial={{opacity: 0, y: -20}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{type: "spring", damping: 25, stiffness: 300}}
                         >
                             <ChatsPage isMobile={isMobile}/>
                         </motion.div>
                     }/>
                     <Route path="/communitie-profilepage" element={
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            initial={{opacity: 0, y: -20}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -20}}
+                            transition={{type: "spring", damping: 25, stiffness: 300}}
                         >
                             <ProfilePage/>
                         </motion.div>
@@ -147,9 +194,14 @@ export default function App() {
                 </Routes>
             </AnimatePresence>
 
+            {/*<PostView*/}
+            {/*    post={postData}*/}
+            {/*/>*/}
+
             {/* Подвал - отображается только на определенных путях */}
             {footerPaths.includes(location.pathname) && (
-                <footer className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
+                <footer
+                    className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
                     <div className="flex justify-around">
                         {[
                             {
