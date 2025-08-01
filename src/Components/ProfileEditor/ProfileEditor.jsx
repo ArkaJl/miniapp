@@ -205,7 +205,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
     };
 
     return (
-        <div className="bg-[#f5f7fa] min-h-screen pb-20">
+        <div className="bg-[#14102a] min-h-screen pb-20">
             {/* Шапка редактора */}
             <div className="bg-[#14102a] text-white p-4 flex justify-between items-center sticky top-0 z-10">
                 <button onClick={onBack} className="p-2">
@@ -231,7 +231,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                     >
                         <input {...bannerDropzone.getInputProps()} />
                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                            <div className="opacity-0 group-hover:opacity-100 transition-all text-white flex flex-col items-center">
+                            <div className="opacity-70 group-hover:opacity-100 transition-all text-white flex flex-col items-center">
                                 <FaImage className="text-2xl mb-1"/>
                                 <span className="text-sm">Нажмите для загрузки баннера</span>
                             </div>
@@ -263,7 +263,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                                    <FaImage className="opacity-0 group-hover:opacity-100 transition-all text-white"/>
+                                    <FaImage className="opacity-70 group-hover:opacity-100 transition-all text-white"/>
                                 </div>
                             </div>
                             <button
@@ -317,7 +317,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                 {/* Основная информация */}
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                        <label className="block text-sm font-medium text-white/50 mb-1">Имя</label>
                         <input
                             type="text"
                             name="name"
@@ -328,9 +328,9 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Тег (без @)</label>
+                        <label className="block text-sm font-medium text-white/50 mb-1">Тег (без @)</label>
                         <div className="flex">
-                            <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
+                            <span className="inline-flex items-center px-3 rounded-l-lg bg-white/20 text-white">
                                 @
                             </span>
                             <input
@@ -344,7 +344,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Статус</label>
+                        <label className="block text-sm font-medium text-white/50 mb-1">Статус</label>
                         <textarea
                             name="status"
                             value={profile.status || ''}
@@ -425,17 +425,17 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                 <div className="space-y-3">
                     <h3 className="font-medium">Статистика</h3>
                     <div className="grid grid-cols-3 gap-2">
-                        <div className="rounded-lg p-3 text-center shadow bg-gray-100">
+                        <div className="rounded-lg p-3 text-center shadow bg-white/20">
                             <div className="text-lg font-bold">{profile.stats?.posts || 0}</div>
-                            <div className="text-xs text-gray-600">Постов</div>
+                            <div className="text-xs text-white/70">Постов</div>
                         </div>
-                        <div className="rounded-lg p-3 text-center shadow bg-gray-100">
+                        <div className="rounded-lg p-3 text-center shadow bg-white/20">
                             <div className="text-lg font-bold">{profile.stats?.followers || 0}</div>
-                            <div className="text-xs text-gray-600">Подписчиков</div>
+                            <div className="text-xs text-white/70">Подписчиков</div>
                         </div>
-                        <div className="rounded-lg p-3 text-center shadow bg-gray-100">
+                        <div className="rounded-lg p-3 text-center shadow bg-white/20">
                             <div className="text-lg font-bold">{profile.stats?.following || 0}</div>
-                            <div className="text-xs text-gray-600">Подписок</div>
+                            <div className="text-xs text-white/70">Подписок</div>
                         </div>
                     </div>
                 </div>
@@ -498,7 +498,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                             ) : (
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label className="block text-sm font-medium text-black mb-1">
                                             {showSocialInput.type === 'discord' ? 'Discord username' : 'Twitter username'}
                                         </label>
                                         <input
@@ -507,7 +507,7 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                                             value={profile.socialLinks?.[showSocialInput.type] || ''}
                                             onChange={handleSocialChange}
                                             placeholder={showSocialInput.type === 'discord' ? 'username#1234' : '@username'}
-                                            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8e83e4] focus:border-transparent"
+                                            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8e83e4] focus:border-transparent text-black"
                                         />
                                     </div>
                                     <div className="flex justify-end space-x-2">
@@ -662,17 +662,29 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
 
                                 {/* Статистика */}
                                 <div className="grid grid-cols-3 gap-2 mb-6">
-                                    <div className="rounded-lg p-3 text-center shadow bg-gray-100">
-                                        <div className="text-lg font-bold">{profile.stats?.posts || 0}</div>
-                                        <div className="text-xs text-gray-600">Постов</div>
+                                    <div className="rounded-lg p-3 text-center shadow bg-white/20">
+                                        <div className="text-lg font-bold"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >{profile.stats?.posts || 0}</div>
+                                        <div className="text-xs text-white/70"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >Постов</div>
                                     </div>
-                                    <div className="rounded-lg p-3 text-center shadow bg-gray-100">
-                                        <div className="text-lg font-bold">{profile.stats?.followers || 0}</div>
-                                        <div className="text-xs text-gray-600">Подписчиков</div>
+                                    <div className="rounded-lg p-3 text-center shadow bg-white/20">
+                                        <div className="text-lg font-bold"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >{profile.stats?.followers || 0}</div>
+                                        <div className="text-xs text-white/70"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >Подписчиков</div>
                                     </div>
-                                    <div className="rounded-lg p-3 text-center shadow bg-gray-100">
-                                        <div className="text-lg font-bold">{profile.stats?.following || 0}</div>
-                                        <div className="text-xs text-gray-600">Подписок</div>
+                                    <div className="rounded-lg p-3 text-center shadow bg-white/20">
+                                        <div className="text-lg font-bold"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >{profile.stats?.following || 0}</div>
+                                        <div className="text-xs text-white/70"
+                                             style={{ color: profile.textColor || defaultProfile.textColor }}
+                                        >Подписок</div>
                                     </div>
                                 </div>
 
@@ -684,7 +696,8 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                                             {profile.interests.filter(i => i?.trim() !== '').map((interest, i) => (
                                                 <span
                                                     key={i}
-                                                    className="px-3 py-1 bg-gray-200 rounded-full text-sm"
+                                                    className="px-3 py-1 bg-white/20 rounded-full text-sm"
+                                                    style={{ color: profile.textColor || defaultProfile.textColor }}
                                                 >
                                                     {interest}
                                                 </span>
@@ -701,13 +714,17 @@ const ProfileEditor = ({ profileData, onBack, onSave }) => {
                                             {profile.socialLinks?.discord && (
                                                 <div className="flex items-center space-x-2">
                                                     <FaDiscord className="text-[#576ecb]"/>
-                                                    <span>{profile.socialLinks.discord}</span>
+                                                    <span
+                                                        style={{ color: profile.textColor || defaultProfile.textColor }}
+                                                    >{profile.socialLinks.discord}</span>
                                                 </div>
                                             )}
                                             {profile.socialLinks?.twitter && (
                                                 <div className="flex items-center space-x-2">
                                                     <FaTwitter className="text-[#1DA1F2]"/>
-                                                    <span>{profile.socialLinks.twitter}</span>
+                                                    <span
+                                                        style={{ color: profile.textColor || defaultProfile.textColor }}
+                                                    >{profile.socialLinks.twitter}</span>
                                                 </div>
                                             )}
                                         </div>

@@ -15,6 +15,7 @@ import {
 import { GiCoins } from 'react-icons/gi';
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import {useSupabaseClient} from "@supabase/auth-helpers-react";
 
 const AvatarFrame = ({ frame, selected, onClick }) => {
     return (
@@ -55,6 +56,13 @@ const AvatarFrame = ({ frame, selected, onClick }) => {
 };
 
 export default function ProfilePageMain() {
+    const supabase = useSupabaseClient();
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+    };
+
+
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [currentTheme, setCurrentTheme] = useState('light');
     const [coins, setCoins] = useState(150);
@@ -357,29 +365,17 @@ export default function ProfilePageMain() {
                                     {currentTheme === 'light' ? 'Светлая' : currentTheme === 'dark' ? 'Темная' : 'Системная'}
                                 </div>
                             </button>
+
+                            <button
+                                onClick={handleLogout}
+                                className="mt-4 bg-red-500 text-white py-2 px-4 rounded"
+                            >
+                                Выйти из аккаунта
+                            </button>
                         </div>
                     </div>
                 )}
             </div>
-
-            {/* Подвал */}
-            <footer className="bg-[#14102a] border-t border-[#35518e] fixed bottom-0 left-0 right-0 p-3 shadow-md z-50">
-                <div className="flex justify-around">
-                    <Link to="/" className="flex flex-col items-center text-[#8e83e4]">
-                        <FaHome className="text-xl"/>
-                        <span className="text-xs mt-1">Главная</span>
-                    </Link>
-                    <div className="flex flex-col items-center text-[#bcd8f6]">
-                        <FaUserTag className="text-xl"/>
-                        <span className="text-xs mt-1">Профиль</span>
-                        <div className="w-1 h-1 rounded-full bg-[#576ecb] mt-1"></div>
-                    </div>
-                    <Link to="/store" className="flex flex-col items-center text-[#8e83e4]">
-                        <FaStore className="text-xl"/>
-                        <span className="text-xs mt-1">Магазин</span>
-                    </Link>
-                </div>
-            </footer>
 
             {/* Модальное окно выбора темы */}
             {showThemeModal && (

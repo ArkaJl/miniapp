@@ -2,12 +2,14 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const CommunityCover = ({
-                            avatar,
-                            background1,
-                            name,
-                            tags,
-                            description,
+                            avatar = communityData.avatar,
+                            background1 = communityData.coverData.background1,
+                            name = communityData.coverData.name,
+                            tags = communityData.coverData.tags,
+                            description = communityData.coverData.description,
                             descriptionImages = [],
+                            isAdmin,
+                            onEdit
                         }) => {
     const navigate = useNavigate();
 
@@ -18,6 +20,17 @@ const CommunityCover = ({
                 style={{ backgroundImage: `url(${background1})` }}
                 className="relative w-full h-56 md:h-72 bg-cover bg-center pt-16"
             >
+                {isAdmin && (
+                    <button
+                        onClick={onEdit}
+                        className="absolute top-4 right-16 z-20 bg-white/20 p-2 rounded-full"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+                )}
+
                 {/* Темный оверлей */}
                 <div className="absolute inset-0 bg-black/50 flex items-end pb-8 md:items-center md:pb-0">
                     <div className="container mx-auto px-4 md:px-8">
