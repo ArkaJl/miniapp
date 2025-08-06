@@ -55,22 +55,42 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Проверяем существующую сессию при загрузке
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-        });
+    // Упрощенная проверка сессии
+    const checkSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        return session;
+    };
 
-        // Слушаем изменения состояния аутентификации
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
+    useEffect(() => {
+        const initializeAuth = async () => {
+            try {
+                const session = await checkSession();
+
+                if (session) {
+                    // Обновляем last_online без Realtime
+                    await supabase
+                        .from('users')
+                        .update({ last_online: new Date().toISOString() })
+                        .eq('id', session.user.id);
+                }
+
                 setSession(session);
                 setLoading(false);
+            } catch (error) {
+                console.error('Auth initialization error:', error);
+                setLoading(false);
+            }
+        };
 
-                // Перенаправляем пользователя после входа/выхода
-                if (event === 'SIGNED_IN') navigate('/');
-                if (event === 'SIGNED_OUT') navigate('/signin');
+        initializeAuth();
+
+        // Только базовые события без подписки на изменения
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (event) => {
+                if (event === 'SIGNED_OUT') {
+                    localStorage.clear();
+                    navigate('/signin');
+                }
             }
         );
 
@@ -81,7 +101,8 @@ const AuthProvider = ({ children }) => {
         session,
         loading,
         supabase,
-        isAuthenticated: !!session
+        isAuthenticated: !!session,
+        checkSession // Добавляем функцию проверки в контекст
     }), [session, loading]);
 
     if (loading) {
