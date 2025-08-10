@@ -9,7 +9,7 @@ import { GiPresent } from "react-icons/gi";
 import {useState} from "react";
 import CommunityEditor from "./CommunityEditor.jsx";
 
-const CommunityMenu = ({ isOpen, onClose, isAdmin, communityName, coverImage }) => {
+const CommunityMenu = ({ isOpen, onClose, isAdmin, communityName, coverImage, onEdit, onEditCover }) => {
     const overlayVariants = {
         open: { opacity: 1, transition: { duration: 0.2 } },
         closed: { opacity: 0, transition: { duration: 0.2 } }
@@ -19,7 +19,6 @@ const CommunityMenu = ({ isOpen, onClose, isAdmin, communityName, coverImage }) 
         open: { x: 0, transition: { type: "tween", ease: "easeOut", duration: 0.25 } },
         closed: { x: "-100%", transition: { duration: 0.2 } }
     };
-    const [isEditorOpen, setIsEditorOpen] = useState(false);
 
     return (
         <AnimatePresence>
@@ -80,7 +79,12 @@ const CommunityMenu = ({ isOpen, onClose, isAdmin, communityName, coverImage }) 
                                     <MenuItem
                                         icon={<FaCog />}
                                         label="Редактировать сообщество"
-                                        onClick={() => setIsEditorOpen(true)}
+                                        onClicked={onEdit}
+                                    />
+                                    <MenuItem
+                                        icon={<FaCog />}
+                                        label="Изменить Обложку сообщества"
+                                        onClicked={onEditCover}
                                     />
                                 </MenuSection>
                             )}
@@ -103,13 +107,6 @@ const CommunityMenu = ({ isOpen, onClose, isAdmin, communityName, coverImage }) 
                     </motion.div>
                 </>
             )}
-            {isEditorOpen && (
-                <CommunityEditor
-                    isOpen={isEditorOpen}
-                    onClose={() => setIsEditorOpen(false)}
-                    isAdmin={isAdmin}
-                />
-            )}
         </AnimatePresence>
     );
 };
@@ -128,10 +125,11 @@ const MenuSection = ({ title, children }) => (
     </div>
 );
 
-const MenuItem = ({ icon, label, isActive = false, badge }) => (
+const MenuItem = ({ icon, label, isActive = false, badge, onClicked }) => (
     <button
         className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors
       ${isActive ? 'bg-[#1e293b] text-[#8e83e4]' : 'text-gray-300 hover:bg-[#1e293b] hover:text-white'}`}
+        onClick={onClicked}
     >
 
         <div className="flex items-center">

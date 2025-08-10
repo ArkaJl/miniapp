@@ -20,12 +20,16 @@ import PostCreator from "../../Components/PostCreator/PostCreator.jsx";
 import _ from 'lodash';
 import Footer from "../../Components/Community/Footer.jsx";
 import CommunityMenu from "../../Components/Community/CommunityMenu.jsx";
+import CommunityEditor from "../../Components/Community/CommunityEditor.jsx";
+import CommunityCoverEditor from "../../Components/Community/CommunityCoverEditor.jsx";
 
 const CommunityPage = ({isMobile}) => {
     const [activeTab, setActiveTab] = useState('home');
     const [isScrolled, setIsScrolled] = useState(false);
     const [showPostCreator, setShowPostCreator] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isEditorOpen, setIsEditorOpen] = useState(false);
+    const [isCoverEditorOpen, setIsCoverEditorOpen] = useState(false);
 
     const [communityData, setCommunityData] = useState({
         name: "Крутое сообщество",
@@ -35,11 +39,17 @@ const CommunityPage = ({isMobile}) => {
         primaryColor: "#8e83e4",
         textColor: "#ffffff",
         backgroundColor: "#14102a",
+
+        // Новые поля для редактора
+        footerColor: "#14102a",
+        footerIconColor: "#8e83e4",
+
         coverData: {
-            name: "Добро пожаловать!",
+            avatar: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
             description: "Присоединяйтесь к нашему сообществу",
-            background1: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
-            tags: ["сообщество", "чат", "развлечения"]
+            background: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
+            tags: ["сообщество", "чат", "развлечения"],
+            descriptionImages: [],
         }
     });
 
@@ -136,7 +146,7 @@ const CommunityPage = ({isMobile}) => {
     }, []);
 
     const handleLike = (postId, isLiked) => {
-        // ... (оставь handleLike без изменений)
+        // ... пу пу пу
     };
 
     const handlePostClick = (postId) => {
@@ -177,20 +187,27 @@ const CommunityPage = ({isMobile}) => {
                 </div>
 
                 {/* Правая колонка - шире (w-96 вместо w-80), чтобы не было горизонтального скролла */}
-                <div className="w-96 bg-[#1c2562] border-l border-[#2a2a4a] sticky top-0 h-screen overflow-y-auto flex flex-col">
+                <div
+                    className="w-96 sticky top-0 h-screen overflow-y-auto flex flex-col"
+                    style={{
+                        backgroundColor: communityData.backgroundColor,
+                        borderColor: communityData.primaryColor
+                    }}
+                >
                     {/* Шапка сообщества */}
                     <div className="bg-[#233e85] p-4">
                         <div className="flex justify-between items-center mb-4">
                             <Link to="/" className="flex items-center">
-                                <FaArrowLeft className="text-xl" />
+                                <FaArrowLeft className="text-xl"/>
                             </Link>
                             <button className="p-1 rounded-full hover:bg-[#35518e]">
-                                <FaBell className="text-lg" />
+                                <FaBell className="text-lg"/>
                             </button>
                         </div>
 
                         <div className="flex items-center mb-4">
-                            <div className="rounded-full bg-[#8e83e4] overflow-hidden border-2 border-white w-16 h-16 flex-shrink-0">
+                            <div
+                                className="rounded-full bg-[#8e83e4] overflow-hidden border-2 border-white w-16 h-16 flex-shrink-0">
                                 <img
                                     src={communityData.avatar}
                                     className="w-full h-full object-cover"
@@ -202,7 +219,7 @@ const CommunityPage = ({isMobile}) => {
                                     {communityData.name}
                                 </h1>
                                 <div className="flex items-center text-sm text-gray-300 mt-1">
-                                    <FaUsers className="mr-1" />
+                                    <FaUsers className="mr-1"/>
                                     <span>42 участника • 5 онлайн</span>
                                 </div>
                             </div>
@@ -214,7 +231,8 @@ const CommunityPage = ({isMobile}) => {
 
                         <div className="flex flex-wrap gap-2 mb-4">
                             {communityData.coverData.tags.map(tag => (
-                                <span key={tag} className="bg-[#35518e] text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                                <span key={tag}
+                                      className="bg-[#35518e] text-xs px-2 py-1 rounded-full whitespace-nowrap">
                                     #{tag}
                                 </span>
                             ))}
@@ -222,11 +240,11 @@ const CommunityPage = ({isMobile}) => {
 
                         <div className="flex space-x-2">
                             <div className="flex items-center bg-[#1c2562] px-3 py-1 rounded-full">
-                                <GiCoins className="text-[#bbb2f0] text-sm mr-1" />
+                                <GiCoins className="text-[#bbb2f0] text-sm mr-1"/>
                                 <span className="text-sm">150</span>
                             </div>
                             <div className="flex items-center bg-[#1c2562] px-3 py-1 rounded-full">
-                                <GiBo className="text-[#a45cd4] text-sm mr-1" />
+                                <GiBo className="text-[#a45cd4] text-sm mr-1"/>
                                 <span className="text-sm">25</span>
                             </div>
                         </div>
@@ -277,7 +295,10 @@ const CommunityPage = ({isMobile}) => {
 
                     {/* Подвал (Footer) - теперь в правой колонке */}
                     <div className="mt-auto">
-                        <Footer setIsMenuOpen={setIsMenuOpen} />
+                        <Footer
+                            setIsMenuOpen={setIsMenuOpen}
+                            communityData={communityData}
+                        />
                     </div>
                 </div>
 
@@ -308,12 +329,43 @@ const CommunityPage = ({isMobile}) => {
                     isAdmin={true}
                     communityName={communityData.name}
                     coverImage={communityData.background}
-                    communityData={communityData}
-                    setCommunityData={() => {}}
+                    onEdit={() => setIsEditorOpen(true)}
+                    onEditCover={() => setIsCoverEditorOpen(true)}
                 />
+                {isEditorOpen && (
+                    <CommunityEditor
+                        isOpen={isEditorOpen}
+                        onClose={() => setIsEditorOpen(false)}
+                        initialData={communityData}
+                        onSave={(newData) => {
+                            setCommunityData(newData);
+                            // Здесь будет сохранение на сервере
+                            console.log("Saving community data:", newData);
+                        }}
+                    />
+                )}
+                {isCoverEditorOpen && (
+                    <CommunityCoverEditor
+                        isOpen={isCoverEditorOpen}
+                        onClose={() => setIsCoverEditorOpen(false)}
+                        initialData={communityData} // или данные, которые вы используете для обложки
+                        onSave={(newData) => {
+                            // Обновляем данные сообщества
+                            setCommunityData(newData);
+                        }}
+                    />
+                )}
             </div>
         );
     }
+
+//______________________________________________________________________________________________
+//______________________________________________________________________________________________
+//______________________________________________________________________________________________
+//____________________________М О Б И Л Ь Н Ы Й  Б Л О К________________________________________
+//______________________________________________________________________________________________
+//______________________________________________________________________________________________
+//______________________________________________________________________________________________
 
     // Мобильная версия (остается без изменений)
     const headerHeight = isMobile ? (isScrolled ? 100 : 160) : (isScrolled ? 120 : 180);
@@ -323,7 +375,8 @@ const CommunityPage = ({isMobile}) => {
         <div className="bg-[#14102a] text-white min-h-screen flex flex-col">
             <div style={{ height: `${headerHeight + tabsHeight}px` }} className="sticky top-0 z-50">
                 <motion.header
-                    className="relative bg-[#233e85] w-full overflow-hidden"
+                    className="relative w-full overflow-hidden"
+                    style={{ backgroundColor: communityData.backgroundColor }}
                     initial={false}
                     animate={{
                         height: `${headerHeight}px`
@@ -438,7 +491,7 @@ const CommunityPage = ({isMobile}) => {
                 {renderActiveTab()}
             </main>
 
-            {!showPostCreator && <Footer className="mt-auto" setIsMenuOpen={setIsMenuOpen}/>}
+            {!showPostCreator && <Footer className="mt-auto" setIsMenuOpen={setIsMenuOpen} communityData={communityData}/>}
 
             {!showPostCreator && (
                 <motion.button
@@ -467,9 +520,34 @@ const CommunityPage = ({isMobile}) => {
                 isAdmin={true}
                 communityName={communityData.name}
                 coverImage={communityData.background}
-                communityData={communityData}
-                setCommunityData={setCommunityData}
+                onEdit={() => setIsEditorOpen(true)}
+                onEditCover={() => setIsCoverEditorOpen(true)}
             />
+
+            {isEditorOpen && (
+                <CommunityEditor
+                    isOpen={isEditorOpen}
+                    onClose={() => setIsEditorOpen(false)}
+                    initialData={communityData}
+                    onSave={(newData) => {
+                        setCommunityData(newData);
+                        // Здесь будет сохранение на сервере
+                        console.log("Saving community data:", newData);
+                    }}
+                />
+            )}
+            {isCoverEditorOpen && (
+                <CommunityCoverEditor
+                    isOpen={isCoverEditorOpen}
+                    onClose={() => setIsCoverEditorOpen(false)}
+                    initialData={communityData} // или данные, которые вы используете для обложки
+                    onSave={(newData) => {
+                        // Обновляем данные сообщества
+                        setCommunityData(newData);
+                    }}
+                />
+            )}
+
         </div>
     );
 };

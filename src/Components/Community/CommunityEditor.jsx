@@ -1,262 +1,347 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FaSave, FaTimes, FaPalette, FaImage, FaAlignLeft, FaUsers } from 'react-icons/fa';
+// src/Components/Community/CommunityEditor.jsx
+import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { FaTimes, FaSave, FaUndo } from "react-icons/fa";
+import { ChromePicker } from "react-color";
+import {HexColorPicker} from "react-colorful";
 
-// Фейковый API для работы с данными сообщества
-const fakeApi = {
-    getCommunityData: () => ({
-        name: "Крутое сообщество",
-        description: "Описание сообщества",
-        avatar: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
-        background: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
-        primaryColor: "#8e83e4",
-        textColor: "#ffffff",
-        backgroundColor: "#14102a",
-        members: 42,
-        online: 5,
-        coverData: {
-            name: "Добро пожаловать!",
-            description: "Присоединяйтесь к нашему сообществу",
-            background1: "https://i.pinimg.com/originals/a3/c9/6b/a3c96be051dc86a4abb70ae70a8e70f7.jpg",
-            tags: ["сообщество", "чат", "развлечения"]
-        }
-    }),
-    saveCommunityData: (data) => {
-        console.log("Данные сохранены (фейковый API):", data);
-        return new Promise(resolve => setTimeout(() => resolve({ success: true }), 500));
-    }
-};
+const CommunityEditor = ({ isOpen, onClose, initialData, onSave }) => {
+    const [formData, setFormData] = useState(initialData);
+    const [tempAvatar, setTempAvatar] = useState(null);
+    const [tempBackground, setTempBackground] = useState(null);
+    const fileInputAvatarRef = useRef(null);
+    const fileInputBackgroundRef = useRef(null);
 
-const CommunityEditor = ({ isOpen, onClose, isAdmin }) => {
-    const [formData, setFormData] = useState(null);
-    const [activeTab, setActiveTab] = useState('main');
-    const [isLoading, setIsLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-
-    // Загрузка данных при открытии
+    // Сброс формы при открытии/закрытии
     useEffect(() => {
         if (isOpen) {
-            setIsLoading(true);
-            const data = fakeApi.getCommunityData();
-            setFormData(data);
-            setIsLoading(false);
+            setFormData(initialData);
+            setTempAvatar(null);
+            setTempBackground(null);
         }
-    }, [isOpen]);
+    }, [isOpen, initialData]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleCoverChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
-            coverData: { ...prev.coverData, [name]: value }
+            [field]: value
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSaving(true);
-        try {
-            await fakeApi.saveCommunityData(formData);
-            onClose();
-        } finally {
-            setIsSaving(false);
-        }
+    const handleColorChange = (field) => (color) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: color
+        }));
     };
 
-    if (!isOpen || isLoading || !formData) return null;
+    const handleImageChange = (e, type) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            if (type === 'avatar') {
+                setTempAvatar(event.target.result);
+                handleChange('avatar', event.target.result);
+            } else {
+                setTempBackground(event.target.result);
+                handleChange('background', event.target.result);
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleSubmit = () => {
+        onSave(formData);
+        onClose();
+    };
+
+    const handleReset = () => {
+        setFormData(initialData);
+        setTempAvatar(null);
+        setTempBackground(null);
+    };
+
+    if (!isOpen) return null;
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={onClose}
         >
             <motion.div
-                initial={{ y: 50 }}
-                animate={{ y: 0 }}
-                className="bg-[#1e1b3a] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#8e83e4]"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 50, opacity: 0 }}
+                className="bg-[#1c1a3a] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
             >
-                {/* Заголовок */}
-                <div className="sticky top-0 bg-[#2a2750] p-4 border-b border-[#8e83e4] flex justify-between items-center z-10">
-                    <h2 className="text-xl font-bold">Редактор сообщества</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-white">
-                        <FaTimes size={20} />
-                    </button>
-                </div>
-
-                {/* Вкладки */}
-                <div className="flex border-b border-[#8e83e4]">
-                    {['main', 'appearance', 'cover'].map(tab => (
+                <div className="p-5 border-b border-[#35518e] sticky top-0 bg-[#1c1a3a] z-10">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold">Редактирование сообщества</h2>
                         <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`flex-1 py-3 flex items-center justify-center gap-2 ${
-                                activeTab === tab
-                                    ? 'text-[#8e83e4] border-b-2 border-[#8e83e4]'
-                                    : 'text-gray-400'
-                            }`}
-                        >
-                            {tab === 'main' && <FaAlignLeft />}
-                            {tab === 'appearance' && <FaPalette />}
-                            {tab === 'cover' && <FaImage />}
-                            {tab === 'main' && 'Основное'}
-                            {tab === 'appearance' && 'Внешний вид'}
-                            {tab === 'cover' && 'Обложка'}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Форма */}
-                <form onSubmit={handleSubmit} className="p-4 space-y-6">
-                    {/* Основные настройки */}
-                    {activeTab === 'main' && (
-                        <>
-                            <div>
-                                <label className="block mb-2 text-sm">Название сообщества</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 text-sm">Описание</label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    rows={4}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 text-sm">Аватар (URL)</label>
-                                <input
-                                    type="text"
-                                    name="avatar"
-                                    value={formData.avatar}
-                                    onChange={handleChange}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                />
-                                {formData.avatar && (
-                                    <img
-                                        src={formData.avatar}
-                                        alt="Аватар"
-                                        className="mt-2 w-16 h-16 rounded-full object-cover border border-[#8e83e4]"
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )}
-
-                    {/* Внешний вид */}
-                    {activeTab === 'appearance' && (
-                        <>
-                            <div>
-                                <label className="block mb-2 text-sm">Основной цвет</label>
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="color"
-                                        name="primaryColor"
-                                        value={formData.primaryColor}
-                                        onChange={handleChange}
-                                        className="h-10 w-10 rounded cursor-pointer"
-                                    />
-                                    <span>{formData.primaryColor}</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 text-sm">Цвет текста</label>
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="color"
-                                        name="textColor"
-                                        value={formData.textColor}
-                                        onChange={handleChange}
-                                        className="h-10 w-10 rounded cursor-pointer"
-                                    />
-                                    <span>{formData.textColor}</span>
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    {/* Настройки обложки */}
-                    {activeTab === 'cover' && (
-                        <>
-                            <div>
-                                <label className="block mb-2 text-sm">Заголовок обложки</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.coverData.name}
-                                    onChange={handleCoverChange}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 text-sm">Описание обложки</label>
-                                <textarea
-                                    name="description"
-                                    value={formData.coverData.description}
-                                    onChange={handleCoverChange}
-                                    rows={3}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 text-sm">Фон обложки (URL)</label>
-                                <input
-                                    type="text"
-                                    name="background1"
-                                    value={formData.coverData.background1}
-                                    onChange={handleCoverChange}
-                                    className="w-full bg-[#2a2750] border border-[#8e83e4]/50 rounded-lg px-3 py-2"
-                                />
-                                {formData.coverData.background1 && (
-                                    <img
-                                        src={formData.coverData.background1}
-                                        alt="Фон обложки"
-                                        className="mt-2 w-full h-32 object-cover rounded-lg border border-[#8e83e4]"
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )}
-
-                    {/* Кнопки */}
-                    <div className="flex justify-end gap-3 pt-4 border-t border-[#8e83e4]/50">
-                        <button
-                            type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-600 rounded-lg"
-                            disabled={isSaving}
+                            className="text-gray-400 hover:text-white"
                         >
-                            Отмена
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-[#8e83e4] rounded-lg flex items-center gap-2"
-                            disabled={isSaving}
-                        >
-                            {isSaving ? 'Сохранение...' : 'Сохранить'}
-                            {!isSaving && <FaSave />}
+                            <FaTimes size={20} />
                         </button>
                     </div>
-                </form>
+                </div>
+
+                <div className="p-5 space-y-6">
+                    {/* Предпросмотр */}
+                    <div className="bg-[#14102a] p-4 rounded-lg border border-[#35518e]">
+                        <h3 className="font-bold mb-2">Предпросмотр:</h3>
+
+                        <div
+                            className="h-32 rounded-lg relative overflow-hidden mb-4"
+                            style={{ backgroundColor: formData.backgroundColor }}
+                        >
+                            {formData.background && (
+                                <img
+                                    src={formData.background}
+                                    alt="Background"
+                                    className="w-full h-full object-cover"
+                                />
+                            )}
+
+                            <div className="absolute bottom-4 left-4 flex items-center">
+                                <div
+                                    className="w-16 h-16 rounded-full border-2 border-white overflow-hidden"
+                                    style={{ backgroundColor: formData.primaryColor }}
+                                >
+                                    {formData.avatar && (
+                                        <img
+                                            src={formData.avatar}
+                                            alt="Avatar"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    )}
+                                </div>
+                                <div className="ml-3">
+                                    <h4
+                                        className="font-bold text-white"
+                                        style={{ color: formData.textColor }}
+                                    >
+                                        {formData.name}
+                                    </h4>
+                                    <div className="flex space-x-1 mt-1">
+                                        <div
+                                            className="w-2 h-2 rounded-full"
+                                            style={{ backgroundColor: formData.footerColor }}
+                                        />
+                                        <div
+                                            className="w-2 h-2 rounded-full"
+                                            style={{ backgroundColor: formData.footerIconColor }}
+                                        />
+                                        <div
+                                            className="w-2 h-2 rounded-full"
+                                            style={{ backgroundColor: formData.primaryColor }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Предпросмотр футера */}
+                        <div
+                            className="mt-4 p-3 rounded-lg flex justify-around"
+                            style={{ backgroundColor: formData.footerColor }}
+                        >
+                            {['#fff', '#ddd', '#bbb'].map((color, i) => (
+                                <div key={i} className="flex flex-col items-center">
+                                    <div className="w-6 h-6 rounded-full" style={{ backgroundColor: formData.footerIconColor }} />
+                                    <span
+                                        className="text-xs mt-1"
+                                        style={{ color: formData.footerIconColor }}
+                                    >
+                    {i === 0 ? 'Меню' : i === 1 ? 'Чат' : 'Профиль'}
+                  </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Основные настройки */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Название и описание */}
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Название</label>
+                            <input
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => handleChange('name', e.target.value)}
+                                className="w-full bg-[#252349] border border-[#35518e] rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#8e83e4]"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Описание</label>
+                            <textarea
+                                value={formData.description}
+                                onChange={(e) => handleChange('description', e.target.value)}
+                                className="w-full bg-[#252349] border border-[#35518e] rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#8e83e4]"
+                                rows="2"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Загрузка изображений */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Аватар</label>
+                            <div className="flex items-center space-x-3">
+                                <button
+                                    onClick={() => fileInputAvatarRef.current.click()}
+                                    className="bg-[#252349] border border-[#35518e] rounded-lg px-4 py-2"
+                                >
+                                    Выбрать
+                                </button>
+                                <input
+                                    type="file"
+                                    ref={fileInputAvatarRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => handleImageChange(e, 'avatar')}
+                                />
+                                {tempAvatar && (
+                                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+                                        <img src={tempAvatar} alt="Avatar preview" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Фоновое изображение</label>
+                            <div className="flex items-center space-x-3">
+                                <button
+                                    onClick={() => fileInputBackgroundRef.current.click()}
+                                    className="bg-[#252349] border border-[#35518e] rounded-lg px-4 py-2"
+                                >
+                                    Выбрать
+                                </button>
+                                <input
+                                    type="file"
+                                    ref={fileInputBackgroundRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => handleImageChange(e, 'background')}
+                                />
+                                {tempBackground && (
+                                    <div className="w-16 h-12 rounded-md overflow-hidden">
+                                        <img src={tempBackground} alt="Background preview" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Цветовые настройки */}
+                    <div className="space-y-4">
+                        <h3 className="font-bold">Цветовая схема:</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Основной цвет</label>
+                                <div className="flex items-center gap-3">
+                                    <HexColorPicker
+                                        color={formData.primaryColor}
+                                        onChange={handleColorChange('primaryColor')}
+                                        className="!w-full h-32"
+                                    />
+                                    <div
+                                        className="w-10 h-10 rounded border border-gray-600"
+                                        style={{backgroundColor: formData.primaryColor}}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Цвет текста</label>
+                                <div className="flex items-center gap-3">
+                                    <HexColorPicker
+                                        color={formData.textColor}
+                                        onChange={handleColorChange('textColor')}
+                                        className="!w-full h-32"
+                                    />
+                                    <div
+                                        className="w-10 h-10 rounded border border-gray-600"
+                                        style={{backgroundColor: formData.textColor}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Фон страницы</label>
+                                <div className="flex items-center gap-3">
+                                    <HexColorPicker
+                                        color={formData.backgroundColor}
+                                        onChange={handleColorChange('backgroundColor')}
+                                        className="!w-full h-32"
+                                    />
+                                    <div
+                                        className="w-10 h-10 rounded border border-gray-600"
+                                        style={{backgroundColor: formData.backgroundColor}}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Фон футера</label>
+                                    <div className="flex items-center gap-3">
+                                        <HexColorPicker
+                                            color={formData.footerColor}
+                                            onChange={handleColorChange('footerColor')}
+                                            className="!w-full h-32"
+                                        />
+                                        <div
+                                            className="w-10 h-10 rounded border border-gray-600"
+                                            style={{backgroundColor: formData.footerColor}}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Цвет иконок футера</label>
+                                    <div className="flex items-center gap-3">
+                                        <HexColorPicker
+                                            color={formData.footerIconColor}
+                                            onChange={handleColorChange('footerIconColor')}
+                                            className="!w-full h-32"
+                                        />
+                                        <div
+                                            className="w-10 h-10 rounded border border-gray-600"
+                                            style={{backgroundColor: formData.footerIconColor}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-5 border-t border-[#35518e] flex justify-between">
+                    <button
+                        onClick={handleReset}
+                        className="flex items-center gap-2 bg-[#252349] hover:bg-[#2d2a56] px-4 py-2 rounded-lg transition-colors"
+                    >
+                        <FaUndo/> Сбросить
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        className="flex items-center gap-2 bg-[#8e83e4] hover:bg-[#a45cd4] px-4 py-2 rounded-lg transition-colors"
+                    >
+                        <FaSave/> Сохранить изменения
+                    </button>
+                </div>
             </motion.div>
         </motion.div>
     );
