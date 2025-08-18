@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaChevronRight, FaSearch } from "react-icons/fa";
 import { GiCoins } from "react-icons/gi";
 import { IoIosNotifications } from "react-icons/io";
@@ -8,7 +8,8 @@ import NotificationsPanel from "./NotificationsPanel";
 import { motion } from "framer-motion";
 import { supabase } from "/src/config/supabase-db-config.js";
 import "./style.css";
-import {useAuth} from "../../App.jsx";
+import { useAuth } from "../../App.jsx";
+import debounce from "lodash.debounce";
 
 export default function MainPage() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -21,15 +22,21 @@ export default function MainPage() {
     const [error, setError] = useState(null);
     const [userData, setUserData] = useState(null);
 
-    // Получаем текущую сессию напрямую из Supabase
-    const getSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        return session?.user;
-    };
+    // Состояния для поиска
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeSearchTab, setActiveSearchTab] = useState('communities');
+    const [searchResultsCommunities, setSearchResultsCommunities] = useState([]);
+    const [searchResultsPeople, setSearchResultsPeople] = useState([]);
+    const [loadingSearch, setLoadingSearch] = useState(false);
 
     const handleSearchClick = () => {
         setIsSearchOpen(true);
         setIsNotificationsOpen(false);
+        // Сброс состояния поиска при открытии
+        setSearchQuery('');
+        setActiveSearchTab('communities');
+        setSearchResultsCommunities([]);
+        setSearchResultsPeople([]);
     };
 
     const handleNotificationsClick = () => {
@@ -42,39 +49,106 @@ export default function MainPage() {
         setIsNotificationsOpen(false);
     };
 
-        const { checkSession, supabase } = useAuth();
+    const { checkSession, supabase: authSupabase } = useAuth();
 
-        // Базовая загрузка данных без подписок
-        const fetchUserData = async (user) => {
-            try {
-                const { data } = await supabase
-                    .from('users')
-                    .select('coins, avatar_url, username')
-                    .eq('id', user.id)
-                    .single();
-
-                setUserData(data);
-            } catch (error) {
-                console.error("Ошибка загрузки данных:", error);
-            } finally {
-                setIsLoading(false);
+    // Функция для выполнения поиска с debounce
+    const performSearch = useCallback(
+        debounce(async (query, tab) => {
+            if (!query.trim()) {
+                setSearchResultsCommunities([]);
+                setSearchResultsPeople([]);
+                setLoadingSearch(false);
+                return;
             }
+
+            setLoadingSearch(true);
+            try {
+                if (tab === 'communities') {
+                    // Реальный запрос к Supabase
+                    const { data, error } = await authSupabase
+                        .from('communities')
+                        .select('id, name, avatar_url, member_count')
+                        .ilike('name', `%${query}%`)
+                        .limit(10);
+
+                    if (!error) {
+                        setSearchResultsCommunities(data || []);
+                    }
+                } else if (tab === 'people') {
+                    // Реальный запрос к Supabase
+                    const { data, error } = await authSupabase
+                        .from('users')
+                        .select('id, username, avatar_url, status')
+                        .ilike('username', `%${query}%`)
+                        .limit(10);
+
+                    if (!error) {
+                        setSearchResultsPeople(data || []);
+                    }
+                }
+            } catch (error) {
+                console.error("Search error:", error);
+                // Если в режиме разработки, используем псевдоданные
+                if (import.meta.env.MODE === 'development') {
+                    if (tab === 'communities') {
+                        setSearchResultsCommunities([
+                            { id: '1', name: 'Гейминг', member_count: 125000 },
+                            { id: '2', name: 'Программирование', member_count: 89000 },
+                            { id: '3', name: 'Дизайн', member_count: 64000 },
+                        ]);
+                    } else {
+                        setSearchResultsPeople([
+                            { id: '1', username: 'Иван Иванов', status: 'Онлайн' },
+                            { id: '2', username: 'Анна Петрова', status: 'Был(а) недавно' },
+                            { id: '3', username: 'Сергей Сидоров', status: 'Офлайн' },
+                        ]);
+                    }
+                }
+            } finally {
+                setLoadingSearch(false);
+            }
+        }, 300),
+        []
+    );
+
+    useEffect(() => {
+        performSearch(searchQuery, activeSearchTab);
+        return () => performSearch.cancel();
+    }, [searchQuery, activeSearchTab, performSearch]);
+
+    // Базовая загрузка данных без подписок
+    const fetchUserData = async (user) => {
+        try {
+            const { data } = await authSupabase
+                .from('users')
+                .select('coins, avatar_url, username')
+                .eq('id', user.id)
+                .single();
+
+            setUserData(data);
+            if (data) setCoins(data.coins);
+        } catch (error) {
+            console.error("Ошибка загрузки данных:", error);
+            setError("Произошла ошибка при загрузке данных");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const loadData = async () => {
+            const session = await checkSession();
+
+            if (!session) {
+                window.location.href = '/signin';
+                return;
+            }
+
+            await fetchUserData(session.user);
         };
 
-        useEffect(() => {
-            const loadData = async () => {
-                const session = await checkSession();
-
-                if (!session) {
-                    window.location.href = '/signin';
-                    return;
-                }
-
-                await fetchUserData(session.user);
-            };
-
-            loadData();
-        }, []);
+        loadData();
+    }, []);
 
     // Skeleton loader для заглушки во время загрузки
     if (isLoading) {
@@ -150,7 +224,7 @@ export default function MainPage() {
                         {/* Поиск */}
                         <motion.div
                             className="relative flex-1 max-w-md mr-2"
-                            whileTap={{scale: 0.98}}
+                            whileTap={{ scale: 0.98 }}
                         >
                             <div className="relative">
                                 <motion.input
@@ -159,10 +233,10 @@ export default function MainPage() {
                                     className="w-full py-2 px-4 pr-10 rounded-full bg-[#35518e] text-white placeholder-[#85b7ef] focus:outline-none focus:ring-2 focus:ring-[#8e83e4]"
                                     onClick={handleSearchClick}
                                     readOnly
-                                    whileHover={{scale: 1.02}}
-                                    whileTap={{scale: 0.98}}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                 />
-                                <FaSearch className="absolute right-3 top-3 text-[#bbb2f0]"/>
+                                <FaSearch className="absolute right-3 top-3 text-[#bbb2f0]" />
                             </div>
                         </motion.div>
 
@@ -171,7 +245,7 @@ export default function MainPage() {
                             {/* Монеты */}
                             {!isSearchOpen && !isNotificationsOpen && (
                                 <div className="flex items-center bg-[#233e85] px-2 py-1 rounded-full">
-                                    <GiCoins className="text-[#bbb2f0] text-xl mr-1"/>
+                                    <GiCoins className="text-[#bbb2f0] text-xl mr-1" />
                                     <span className="text-sm font-medium">{coins}</span>
                                 </div>
                             )}
@@ -182,7 +256,7 @@ export default function MainPage() {
                                     onClick={handleNotificationsClick}
                                     className={`p-1 rounded-full ${isNotificationsOpen ? "bg-[#35518e]" : "hover:bg-[#35518e]"}`}
                                 >
-                                    <IoIosNotifications className="text-xl"/>
+                                    <IoIosNotifications className="text-xl" />
                                     {unreadNotificationsCount > 0 && (
                                         <span className="absolute -top-1 -right-1 bg-[#a45cd4] text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
                                             {unreadNotificationsCount}
@@ -216,7 +290,17 @@ export default function MainPage() {
                 </header>
 
                 {/* Панель поиска */}
-                <SearchPanel isOpen={isSearchOpen} onClose={handleCloseAllPanels}/>
+                <SearchPanel
+                    isOpen={isSearchOpen}
+                    onClose={handleCloseAllPanels}
+                    searchQuery={searchQuery}
+                    onSearchQueryChange={setSearchQuery}
+                    activeTab={activeSearchTab}
+                    onActiveTabChange={setActiveSearchTab}
+                    communities={searchResultsCommunities}
+                    people={searchResultsPeople}
+                    loading={loadingSearch}
+                />
 
                 {/* Панель уведомлений */}
                 <NotificationsPanel

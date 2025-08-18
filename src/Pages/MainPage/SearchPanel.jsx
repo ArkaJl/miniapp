@@ -1,41 +1,23 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSearch, FaTimes, FaChevronRight, FaUsers, FaUserTag } from "react-icons/fa";
 
-const SearchPanel = ({ isOpen, onClose }) => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [activeTab, setActiveTab] = useState("communities");
+const SearchPanel = ({
+                         isOpen,
+                         onClose,
+                         searchQuery,
+                         onSearchQueryChange,
+                         activeTab,
+                         onActiveTabChange,
+                         communities,
+                         people,
+                         loading
+                     }) => {
     const inputRef = useRef(null);
-
-    // Моковые данные
-    const mockData = {
-        communities: [
-            { id: 1, name: "Гейминг", members: "125K", icon: "🎮" },
-            { id: 2, name: "Программирование", members: "89K", icon: "💻" },
-            { id: 3, name: "Дизайн", members: "64K", icon: "🎨" },
-        ],
-        people: [
-            { id: 1, name: "Иван Иванов", status: "Онлайн", icon: "👤" },
-            { id: 2, name: "Анна Петрова", status: "Был(а) недавно", icon: "👩" },
-            { id: 3, name: "Сергей Сидоров", status: "Офлайн", icon: "👨" },
-        ],
-    };
-
-    // Фильтрация данных
-    const filteredData = {
-        communities: mockData.communities.filter(item =>
-            item.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ),
-        people: mockData.people.filter(item =>
-            item.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ),
-    };
 
     useEffect(() => {
         if (isOpen) {
             inputRef.current?.focus();
-            setSearchQuery("");
-            setActiveTab("communities");
         }
     }, [isOpen]);
 
@@ -70,12 +52,12 @@ const SearchPanel = ({ isOpen, onClose }) => {
                                 placeholder="Поиск..."
                                 className="w-full py-2 px-10 rounded-full bg-[#35518e] text-white placeholder-[#85b7ef] focus:outline-none focus:ring-2 focus:ring-[#8e83e4]"
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onChange={(e) => onSearchQueryChange(e.target.value)}
                                 initial={{ scale: 0.95 }}
                                 animate={{ scale: 1 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                             />
-                            <FaSearch className="absolute right-3 text-[#bbb2f0]" />
+                            <FaSearch className="absolute right-3 top-3 text-[#bbb2f0]" />
                         </div>
 
                         {/* Табы */}
@@ -89,7 +71,7 @@ const SearchPanel = ({ isOpen, onClose }) => {
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
                                 className={`flex-1 py-2 font-medium flex items-center justify-center gap-2 ${activeTab === "communities" ? "text-[#bbb2f0] border-b-2 border-[#8e83e4]" : "text-[#576ecb]"}`}
-                                onClick={() => setActiveTab("communities")}
+                                onClick={() => onActiveTabChange("communities")}
                             >
                                 <FaUsers /> Сообщества
                             </motion.button>
@@ -97,7 +79,7 @@ const SearchPanel = ({ isOpen, onClose }) => {
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
                                 className={`flex-1 py-2 font-medium flex items-center justify-center gap-2 ${activeTab === "people" ? "text-[#bbb2f0] border-b-2 border-[#8e83e4]" : "text-[#576ecb]"}`}
-                                onClick={() => setActiveTab("people")}
+                                onClick={() => onActiveTabChange("people")}
                             >
                                 <FaUserTag /> Люди
                             </motion.button>
@@ -115,8 +97,16 @@ const SearchPanel = ({ isOpen, onClose }) => {
                             <>
                                 {activeTab === "communities" && (
                                     <motion.div layout>
-                                        {filteredData.communities.length > 0 ? (
-                                            filteredData.communities.map(item => (
+                                        {loading ? (
+                                            <motion.p
+                                                className="text-center py-4 text-[#bbb2f0]"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                            >
+                                                Загрузка...
+                                            </motion.p>
+                                        ) : communities.length > 0 ? (
+                                            communities.map(item => (
                                                 <motion.div
                                                     key={item.id}
                                                     layout
@@ -127,12 +117,24 @@ const SearchPanel = ({ isOpen, onClose }) => {
                                                     whileHover={{ scale: 1.01 }}
                                                     whileTap={{ scale: 0.98 }}
                                                 >
-                                                    <div className="w-10 h-10 rounded-full bg-[#8e83e4] mr-3 flex items-center justify-center text-xl">
-                                                        {item.icon}
+                                                    <div className="w-10 h-10 rounded-full bg-[#8e83e4] mr-3 overflow-hidden flex items-center justify-center">
+                                                        {item.avatar_url ? (
+                                                            <img
+                                                                src={item.avatar_url}
+                                                                alt={item.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <span className="text-white font-bold">
+                                {item.name?.[0]?.toUpperCase() || 'C'}
+                              </span>
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
                                                         <h4 className="font-medium">{item.name}</h4>
-                                                        <p className="text-xs text-[#978ce6]">{item.members} участников</p>
+                                                        <p className="text-xs text-[#978ce6]">
+                                                            {item.member_count} участников
+                                                        </p>
                                                     </div>
                                                     <FaChevronRight className="text-[#8e83e4]" />
                                                 </motion.div>
@@ -151,8 +153,16 @@ const SearchPanel = ({ isOpen, onClose }) => {
 
                                 {activeTab === "people" && (
                                     <motion.div layout>
-                                        {filteredData.people.length > 0 ? (
-                                            filteredData.people.map(item => (
+                                        {loading ? (
+                                            <motion.p
+                                                className="text-center py-4 text-[#bbb2f0]"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                            >
+                                                Загрузка...
+                                            </motion.p>
+                                        ) : people.length > 0 ? (
+                                            people.map(item => (
                                                 <motion.div
                                                     key={item.id}
                                                     layout
@@ -163,12 +173,24 @@ const SearchPanel = ({ isOpen, onClose }) => {
                                                     whileHover={{ scale: 1.01 }}
                                                     whileTap={{ scale: 0.98 }}
                                                 >
-                                                    <div className="w-10 h-10 rounded-full bg-[#a45cd4] mr-3 flex items-center justify-center text-xl">
-                                                        {item.icon}
+                                                    <div className="w-10 h-10 rounded-full bg-[#a45cd4] mr-3 overflow-hidden flex items-center justify-center">
+                                                        {item.avatar_url ? (
+                                                            <img
+                                                                src={item.avatar_url}
+                                                                alt={item.username}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <span className="text-white font-bold">
+                                {item.username?.[0]?.toUpperCase() || 'U'}
+                              </span>
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
-                                                        <h4 className="font-medium">{item.name}</h4>
-                                                        <p className="text-xs text-[#978ce6]">{item.status}</p>
+                                                        <h4 className="font-medium">{item.username}</h4>
+                                                        <p className="text-xs text-[#978ce6]">
+                                                            {item.status || "Статус не указан"}
+                                                        </p>
                                                     </div>
                                                     <FaChevronRight className="text-[#8e83e4]" />
                                                 </motion.div>
